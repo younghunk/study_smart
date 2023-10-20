@@ -3,12 +3,12 @@
 <mapper namespace="QnaBoardMapper">
 
     <select id="getQnaList" resultType="hashmap">
-        SELECT SEQ, TITLE, CONTENT, WRITER, PARENT_NO, CHILD_NO, GROUP_NO
+        SELECT SEQ, TITLE, CONTENT, WRITER, PARENT_NO, CHILD_NO, GROUP_NO, NOTICE_YN
         FROM QNA_BOARD
         <if test="searchValue != null and searchValue != ''">
             WHERE TITLE LIKE '%${searchValue}%'
         </if>
-        ORDER BY PARENT_NO DESC, CHILD_NO ASC
+        ORDER BY NOTICE_YN DESC, PARENT_NO DESC, CHILD_NO ASC
         LIMIT #{offset}, #{dataPerPage}
     </select>
 

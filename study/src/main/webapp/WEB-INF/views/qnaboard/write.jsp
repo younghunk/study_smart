@@ -64,7 +64,7 @@
     <div id="writeForm">
         작성자 <input type="text" name="writer" id="writer">
         <br>
-        제목 <input type="checkbox" name="noticeYn" value="Y"> <input type="text" name="title" id="title">
+        제목 <input type="text" name="title" id="title"> &nbsp; 공지<input type="checkbox" name="noticeYn" value="Y">
         <br>
         내용 <input type="text" name="content" id="content">
         <br>
