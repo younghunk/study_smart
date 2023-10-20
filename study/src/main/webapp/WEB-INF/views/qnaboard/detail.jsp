@@ -16,7 +16,7 @@
         function fn_edit() {
             $.ajax({
                 type : 'post',
-                url : '/qnaboard/edit',
+                url : '/board/qnaboardr/edit',
                 data : {
                     SEQ : $('#SEQ').val(),
                     WRITER : $('#WRITER').val(),
@@ -26,7 +26,7 @@
                 success : function (result) {
                     console.log(result);
                     alert("수정성공");
-                    location.href = '/qnaboard/detail?seq=' + ${data.SEQ};
+                    location.href = '/board/qnaboardr/detail?seq=' + ${data.SEQ};
                 },
                 error : function (error) {
                     console.log(error);
@@ -37,14 +37,14 @@
         function fn_delete(SEQ) {
             $.ajax({
                 type: 'post',
-                url: '/qnaboard/delete',
+                url: '/board/qnaboardr/delete',
                 data: {
                     seq : SEQ
                 },
                 success : function (result) {
                     console.log(result);
                     alert("삭제성공");
-                    location.href = '/qnaboard/list';
+                    location.href = '/board/qnaboardr/list';
                 },
                 error : function(error) {
                     console.log(error);
@@ -55,7 +55,7 @@
         function fn_write_answer() {
             $.ajax({
                 type: 'post',
-                url: '/qnaboard/answer',
+                url: '/board/qnaboardr/answer',
                 data: {
                     seq : '${data.SEQ}',
                     parentNo : '${data.PARENT_NO}',
@@ -68,7 +68,7 @@
                 },
                 success: function (result) {
                     console.log(result);
-                    location.href = '/qnaboard/list';
+                    location.href = '/board/qnaboardr/list';
                 },
                 error: function (error){
                     console.log(error);
@@ -78,7 +78,7 @@
 
         function fn_write_reply() {
             $.ajax({
-                url: '/qnaboard/reply/write',
+                url: '/board/qnaboardr/reply/write',
                 type: 'post',
                 data: {
                     content : $('#REPLY_CONTENT').val(),
@@ -87,7 +87,7 @@
                 },
                 success: function (result) {
                     console.log(result);
-                    location.href = '/qnaboard/detail?seq=' + ${data.SEQ};
+                    location.href = '/board/qnaboardr/detail?seq=' + ${data.SEQ};
                 },
                 error: function (error) {
                     console.log(error);
@@ -98,13 +98,13 @@
         function fn_delete_reply(seq) {
             $.ajax({
                 type : 'post',
-                url : '/qnaboard/reply/delete',
+                url : '/board/qnaboardr/reply/delete',
                 data : {
                     seq : seq
                 },
                 success : function (result) {
                     console.log(result);
-                    location.href = '/qnaboard/detail?seq=' + ${data.SEQ};
+                    location.href = '/board/qnaboardr/detail?seq=' + ${data.SEQ};
                 },
                 error : function (error){
                     console.log(error);

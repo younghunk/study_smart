@@ -23,13 +23,13 @@
         function getDetail(SEQ) {
             $.ajax({
                 type : 'get',
-                url : '/qnaboard/detail',
+                url : '/board/qnaboard/detail',
                 data : {
                     seq : SEQ
                 },
                 success : function (result) {
                     console.log(result);
-                    location.href = "/qnaboard/detail?seq=" + SEQ;
+                    location.href = "/board/qnaboard/detail?seq=" + SEQ;
                 },
                 error : function (error) {
                     console.log(error);
@@ -40,13 +40,13 @@
         // function search() {
         //     $.ajax({
         //         type : 'get',
-        //         url : '/qnaboard/list',
+        //         url : '/board/qnaboard/list',
         //         data : {
         //             searchValue : $('#searchValue').val()
         //         },
         //         success : function (result) {
         //             console.log(result);
-        //             location.href = "/qnaboard/detail?seq=" + SEQ + "&searchValue=" + searchValue;
+        //             location.href = "/board/qnaboard/detail?seq=" + SEQ + "&searchValue=" + searchValue;
         //         },
         //         error : function (error) {
         //             console.log(error);
@@ -59,11 +59,11 @@
 <body class="position-relative">
 
     <div id="search-box" class="position-absolute top-0 start-50 translate-middle-x">
-        <form action="/qnaboard/list" method="get">
+        <form action="/board/qnaboard/list" method="get">
             <input type="search" id="searchValue" name="searchValue" value="${pvo.searchValue}">
             <button type="submit">검색</button>
         </form>
-<%--        <button type="button" onclick="location.href='/qnaboard/list?p=${pvo.page}&searchValue=${pvo.searchValue}'">검색</button>--%>
+<%--        <button type="button" onclick="location.href='/board/qnaboard/list?p=${pvo.page}&searchValue=${pvo.searchValue}'">검색</button>--%>
     </div>
 
     <div id="table-wrapper" class="position-absolute top-50 start-50 translate-middle
@@ -100,22 +100,22 @@
 
         <%-- 처음, 이전 버튼 --%>
         <c:if test="${pvo.page > 1}">
-            <button type="button" onclick="location.href='/qnaboard/list?p=1&searchValue=${pvo.searchValue}'"> 처음 </button>
-            <button type="button" onclick="location.href='/qnaboard/list?p=${pvo.page-1}&searchValue=${pvo.searchValue}'"> < </button>
+            <button type="button" onclick="location.href='/board/qnaboard/list?p=1&searchValue=${pvo.searchValue}'"> 처음 </button>
+            <button type="button" onclick="location.href='/board/qnaboard/list?p=${pvo.page-1}&searchValue=${pvo.searchValue}'"> < </button>
         </c:if>
 
         <%-- 페이지 버튼 --%>
         <c:forEach begin="${pvo.startBlock}" end="${pvo.endBlock}" step="1" var="i">
-            <button type="button" onclick="location.href='/qnaboard/list?p=${i}&searchValue=${pvo.searchValue}'">${i}</button>
+            <button type="button" onclick="location.href='/board/qnaboard/list?p=${i}&searchValue=${pvo.searchValue}'">${i}</button>
         </c:forEach>
 
         <%-- 다음, 끝 버튼 --%>
         <c:if test="${pvo.page < pvo.maxPage}">
-            <button type="button" onclick="location.href='/qnaboard/list?p=${pvo.page+1}&searchValue=${pvo.searchValue}'"> > </button>
-            <button type="button" onclick="location.href='/qnaboard/list?p=${pvo.maxPage}&searchValue=${pvo.searchValue}'"> 끝 </button>
+            <button type="button" onclick="location.href='/board/qnaboard/list?p=${pvo.page+1}&searchValue=${pvo.searchValue}'"> > </button>
+            <button type="button" onclick="location.href='/board/qnaboard/list?p=${pvo.maxPage}&searchValue=${pvo.searchValue}'"> 끝 </button>
         </c:if>
 
-        <button type="button" onclick="location.href='/qnaboard/write'"
+        <button type="button" onclick="location.href='/board/qnaboard/write'"
                 id="write-btn"
                 class="btn btn-dark"
         >글쓰기</button>
