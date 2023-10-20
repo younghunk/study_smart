@@ -24,7 +24,7 @@
 
             $.ajax({
                 type : 'post',
-                url : '/qnaboard/write',
+                url : '/board/qnaboardr/write',
                 data : {
                     writer : $("#writer").val(),
                     title : $("#title").val(),
@@ -33,7 +33,7 @@
                 success : function (result) {
                     if(result.result == "success"){
                         // alert("저장성공");
-                        location.href = "/qnaboard/list";
+                        location.href = "/board/qnaboardr/list";
                     }
                     else{
                         alert("저장실패");
@@ -50,7 +50,7 @@
 </head>
 <body>
 
-<%--    <form action="/qnaboard/write" method="post" id="writeForm">--%>
+<%--    <form action="/board/qnaboardr/write" method="post" id="writeForm">--%>
 <%--        작성자 <input type="text" name="writer" id="writer" value="test">--%>
 <%--        <br>--%>
 <%--        제목 <input type="text" name="title" id="title">--%>
