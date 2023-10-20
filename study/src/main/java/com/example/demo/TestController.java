@@ -26,6 +26,6 @@ public class TestController {
         //System.out.println(">>11>data:"+list);
         logger.debug(">>>>>>>>>11>>>>>>:"+list);
         mv.setViewName("/index.blank");
-        return mv;
+        return mv; 
     }
 }
