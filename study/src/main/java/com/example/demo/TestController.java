@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class TestController {
+public class TestController { 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
