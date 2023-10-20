@@ -1,10 +1,7 @@
 package com.example.demo.board.vo;
 
-import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class PageVo {
 
     public PageVo(int page, int dataPerPage, int pageBlock, int postCount) {
@@ -27,7 +24,79 @@ public class PageVo {
         this.endBlock = endBlock;
     }
 
-    private int page;           // 현재 페이지 번호
+    public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getDataPerPage() {
+		return dataPerPage;
+	}
+
+	public void setDataPerPage(int dataPerPage) {
+		this.dataPerPage = dataPerPage;
+	}
+
+	public int getPageBlock() {
+		return pageBlock;
+	}
+
+	public void setPageBlock(int pageBlock) {
+		this.pageBlock = pageBlock;
+	}
+
+	public int getPostCount() {
+		return postCount;
+	}
+
+	public void setPostCount(int postCount) {
+		this.postCount = postCount;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public int getMaxPage() {
+		return maxPage;
+	}
+
+	public void setMaxPage(int maxPage) {
+		this.maxPage = maxPage;
+	}
+
+	public int getStartBlock() {
+		return startBlock;
+	}
+
+	public void setStartBlock(int startBlock) {
+		this.startBlock = startBlock;
+	}
+
+	public int getEndBlock() {
+		return endBlock;
+	}
+
+	public void setEndBlock(int endBlock) {
+		this.endBlock = endBlock;
+	}
+
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
+	}
+
+	private int page;           // 현재 페이지 번호
     private int dataPerPage;    // 페이지 당 출력할 데이터 개수
     private int pageBlock;      // 화면 하단에 출력할 페이지 사이즈
     private int postCount;      //게시글 수
