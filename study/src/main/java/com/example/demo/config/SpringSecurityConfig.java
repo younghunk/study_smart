@@ -17,7 +17,7 @@ public class SpringSecurityConfig {
     	.csrf().disable()
     	.cors().and()
     	.authorizeHttpRequests()
-    	.antMatchers("/index","/static","/board/**").permitAll();
+    	.antMatchers("/index","/static","*/board/**").permitAll();
         return http.build();
     }
 }
