@@ -20,6 +20,7 @@ public class BoardDao {
     private static final String BoardMapper = "FreeBoardMapper";
 
     @Autowired
+    @Qualifier(value = "orgSqlSession")
     private SqlSession apSqlSession;
 
     public List<HashMap<String, Object>> selectBoardList(HashMap<String, Object> data){

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.board.vo.PageVo;
@@ -13,6 +14,7 @@ import com.example.demo.board.vo.PageVo;
 public class QnaBoardDao {
 	
 	@Autowired
+	@Qualifier(value = "orgSqlSession")
     private SqlSession apSqlSession;
 
     public List<HashMap<String, Object>> getQnaList(PageVo pvo) {

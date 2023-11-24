@@ -22,9 +22,11 @@ public class TestController {
 	@GetMapping("/index")
     public ModelAndView getList(@RequestParam HashMap<String,Object> data) throws Exception {
         ModelAndView mv = new ModelAndView();
-        List<Map<String, Object>> list= dao.selectList(data);
+        //List<Map<String, Object>> list= dao.selectList(data);
+        List<Map<String, Object>> list1= dao.selectList1(data);
         //System.out.println(">>11>data:"+list);
-        logger.debug(">>>>>>>>>11>>>>>>:"+list);
+        //logger.debug(">>>>>>>>>11>>>>>>:"+list);
+        logger.debug(">>>>>>>>>11>>>>>>:"+list1);
         mv.setViewName("/index.blank");
         return mv; 
     }
