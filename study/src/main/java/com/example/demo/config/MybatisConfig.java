@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -89,5 +90,10 @@ public class MybatisConfig {
     @Primary
     public SqlSession ap2SqlSession() throws Exception {
     	return new SqlSessionTemplate(ap2SqlSessionFactoryBean());
+    }
+    
+    @Bean
+    public SqlSession batchSqlSession() throws Exception {
+        return new SqlSessionTemplate(ap1SqlSessionFactoryBean(), ExecutorType.BATCH);
     }
 }
