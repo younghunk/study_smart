@@ -18,25 +18,25 @@ public class BoardDao {
     private static final String BoardMapper = "BoardMapper";
 
     @Autowired
-    @Qualifier(value = "apSqlSession")
-    private SqlSession apSqlSession;
+    @Qualifier(value = "batchSqlSession1")
+    private SqlSession batchSqlSession1;
 
     @Autowired
-    @Qualifier(value = "apSqlSession2")
-    private SqlSession apSqlSession2;
+    @Qualifier(value = "batchSqlSession2")
+    private SqlSession batchSqlSession2;
 
     public List<HashMap<String, Object>> alpha2select() {
-        return apSqlSession.selectList(BoardMapper+".alpha2select");
+        return batchSqlSession1.selectList(BoardMapper+".alpha2select");
     }
 
     public void alpha1insert(HashMap<String, Object> item) {
-        apSqlSession2.insert(BoardMapper+".alpha1insert", item);
+        batchSqlSession2.insert(BoardMapper+".alpha1insert", item);
     }
     public List<HashMap<String, Object>> alpha1select() {
-        return apSqlSession2.selectList(BoardMapper+".alpha1select");
+        return batchSqlSession2.selectList(BoardMapper+".alpha1select");
     }
     public List<HashMap<String, Object>> test2() {
-        return apSqlSession2.selectList(BoardMapper+".test2");
+        return batchSqlSession2.selectList(BoardMapper+".test2");
     }
 
 

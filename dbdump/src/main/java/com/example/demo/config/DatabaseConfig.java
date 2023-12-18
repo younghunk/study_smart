@@ -79,7 +79,13 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public SqlSession batchSqlSession() throws Exception {
+    public SqlSession batchSqlSession2() throws Exception {
+        return new SqlSessionTemplate(apSqlSessionFactoryBean2(), ExecutorType.BATCH);
+    }
+
+    @Bean
+    public SqlSession batchSqlSession1() throws Exception {
         return new SqlSessionTemplate(apSqlSessionFactoryBean(), ExecutorType.BATCH);
     }
+
 }
