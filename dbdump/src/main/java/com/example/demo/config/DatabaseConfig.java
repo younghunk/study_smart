@@ -2,17 +2,15 @@ package com.example.demo.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.annotation.Nullable;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -78,5 +76,10 @@ public class DatabaseConfig {
     @ConfigurationProperties("spring.datasource.hikari.ap2")
     public DataSource apDataSource2() {
         return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    public SqlSession batchSqlSession() throws Exception {
+        return new SqlSessionTemplate(apSqlSessionFactoryBean(), ExecutorType.BATCH);
     }
 }
