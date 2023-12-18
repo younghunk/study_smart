@@ -14,6 +14,8 @@ public class TestDao {
 	
 	@Qualifier(value = "ap1SqlSession")
 	private SqlSession ap1SqlSession;
+	@Qualifier(value = "batchSqlSession")
+	private SqlSession batchSqlSession;
 	@Qualifier(value = "ap2SqlSession")
 	private SqlSession ap2SqlSession;
 	
