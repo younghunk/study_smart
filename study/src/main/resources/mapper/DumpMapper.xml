@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DumpMapper">
-    <select id="alpha2select" resultType="hashmap">
+    <select id="alpha2select" resultType="hashmap" parameterType="int">
         SELECT * FROM `ap-portal2`.ap_crew_activities
-        order by flight_id ASC
-        LIMIT 3500,500
+        limit #{page},1
     </select>
 
 

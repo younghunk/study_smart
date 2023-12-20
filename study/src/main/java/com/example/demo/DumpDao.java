@@ -25,8 +25,8 @@ public class DumpDao {
     @Qualifier(value = "batchSqlSession")
     private SqlSession batchSqlSession;
 
-    public List<HashMap<String, Object>> alpha2select() {
-        return ap2SqlSession.selectList(DumpMapper+".alpha2select");
+    public HashMap<String, Object> alpha2select(int page) {
+        return ap2SqlSession.selectOne(DumpMapper+".alpha2select",page);
     }
 
     public void alpha1insert(HashMap<String, Object> item) {
