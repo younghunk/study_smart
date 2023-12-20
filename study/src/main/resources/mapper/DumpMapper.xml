@@ -4,7 +4,7 @@
     <select id="alpha2select" resultType="hashmap">
         SELECT * FROM `ap-portal2`.ap_crew_activities
         order by flight_id ASC
-        LIMIT 3825,1
+        LIMIT 3500,500
     </select>
 
 

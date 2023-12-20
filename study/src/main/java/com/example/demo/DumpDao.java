@@ -15,7 +15,7 @@ public class DumpDao {
 
     Logger logger = LoggerFactory.getLogger(DumpDao.class);
 
-    private static final String BoardMapper = "DumpMapper";
+    private static final String DumpMapper = "DumpMapper";
 
     @Autowired
     @Qualifier(value = "ap2SqlSession")
@@ -26,10 +26,10 @@ public class DumpDao {
     private SqlSession batchSqlSession;
 
     public List<HashMap<String, Object>> alpha2select() {
-        return ap2SqlSession.selectList(BoardMapper+".alpha2select");
+        return ap2SqlSession.selectList(DumpMapper+".alpha2select");
     }
 
     public void alpha1insert(HashMap<String, Object> item) {
-        batchSqlSession.insert(BoardMapper+".alpha1insert", item);
+        batchSqlSession.insert(DumpMapper+".alpha1insert", item);
     }
 }
