@@ -3,7 +3,7 @@
 <mapper namespace="DumpMapper">
     <select id="alpha2select" resultType="hashmap" parameterType="int">
         SELECT * FROM `ap-portal2`.ap_crew_activities
-        limit #{page},1
+        limit #{page},300
     </select>
 
 

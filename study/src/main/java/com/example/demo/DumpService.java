@@ -17,19 +17,17 @@ public class DumpService {
 
     public void dump() {
         try {
-        	for(int i =0 ; i < 3830; i++) {
-	            HashMap<String, Object> item = dumpDao.alpha2select(i);
-	            
-	            //for (HashMap<String, Object> item : items) {
-	                
-	//                Blob mf = (Blob)item.get("image_blob");
-	//                item.put("image_blob", mf);
-	//                logger.error(">>mf>>>size:{}", mf);
-	                if(item != null) {
-	                	System.out.println("인서트:"+i);
-	                	dumpDao.alpha1insert(item);
-	                }
-	            //}
+        	int page=0;
+        	int cnt=1;
+        	for(int i =0 ; i < 13; i++) {
+        		page = i * 300;
+	            List<HashMap<String, Object>> items = dumpDao.alpha2select(page);	            
+	            if(items != null && items.size() > 0) {
+		            for (HashMap<String, Object> item : items) {
+		                System.out.println("인서트:"+cnt++);
+		                dumpDao.alpha1insert(item);
+		            }
+	            }
         	}
         } catch (Exception e) {
             logger.error("Exception during test", e);
