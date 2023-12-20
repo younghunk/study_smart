@@ -29,6 +29,14 @@ public class MybatisConfig {
     @Autowired
     @Qualifier(value = "ap2DataSource")
     private DataSource ap2DataSource;
+
+    @Autowired
+    @Qualifier(value = "apDataSource1")
+    private DataSource apDataSource1;
+
+    @Autowired
+    @Qualifier(value = "apDataSource2")
+    private DataSource apDataSource2;
     
     @Bean
     @Primary
@@ -49,7 +57,7 @@ public class MybatisConfig {
     @Primary
     public SqlSessionFactory ap1SqlSessionFactoryBean() throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setDataSource(ap1DataSource);
+        sqlSessionFactoryBean.setDataSource(apDataSource1);
         /* 맵퍼 xml 파일 경로 설정 */
         Resource[] resources = new PathMatchingResourcePatternResolver()
                 .getResources("classpath:mapper/**.xml");
@@ -64,7 +72,7 @@ public class MybatisConfig {
     @Primary
     public SqlSessionFactory ap2SqlSessionFactoryBean() throws Exception {
     	SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-    	sqlSessionFactoryBean.setDataSource(ap2DataSource);
+    	sqlSessionFactoryBean.setDataSource(apDataSource2);
     	/* 맵퍼 xml 파일 경로 설정 */
     	Resource[] resources = new PathMatchingResourcePatternResolver()
     			.getResources("classpath:mapper/**.xml");
@@ -91,7 +99,7 @@ public class MybatisConfig {
     public SqlSession ap2SqlSession() throws Exception {
     	return new SqlSessionTemplate(ap2SqlSessionFactoryBean());
     }
-    
+
     @Bean
     public SqlSession batchSqlSession() throws Exception {
         return new SqlSessionTemplate(ap1SqlSessionFactoryBean(), ExecutorType.BATCH);

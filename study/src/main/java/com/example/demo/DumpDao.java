@@ -18,18 +18,18 @@ public class DumpDao {
     private static final String BoardMapper = "DumpMapper";
 
     @Autowired
-    @Qualifier(value = "apSqlSession")
-    private SqlSession apSqlSession;
+    @Qualifier(value = "ap2SqlSession")
+    private SqlSession ap2SqlSession;
 
     @Autowired
-    @Qualifier(value = "batchSqlSession2")
-    private SqlSession batchSqlSession2;
+    @Qualifier(value = "batchSqlSession")
+    private SqlSession batchSqlSession;
 
     public List<HashMap<String, Object>> alpha2select() {
-        return apSqlSession.selectList(BoardMapper+".alpha2select");
+        return ap2SqlSession.selectList(BoardMapper+".alpha2select");
     }
 
     public void alpha1insert(HashMap<String, Object> item) {
-        batchSqlSession2.insert(BoardMapper+".alpha1insert", item);
+        batchSqlSession.insert(BoardMapper+".alpha1insert", item);
     }
 }

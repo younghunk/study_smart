@@ -21,7 +21,7 @@ public class DumpController {
     //글읽기
     @RequestMapping ("/dump")
     public ModelAndView selectBoardList(@RequestParam HashMap<String, Object> data) throws Exception{
-        ModelAndView mv = new ModelAndView("board_select"); //jsp 파일을 가리킴
+        ModelAndView mv = new ModelAndView("dump"); //jsp 파일을 가리킴
         dumpService.dump();
         return mv;
     }

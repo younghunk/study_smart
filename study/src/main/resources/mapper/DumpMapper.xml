@@ -4,19 +4,9 @@
     <select id="alpha2select" resultType="hashmap">
         SELECT * FROM `ap-portal2`.ap_crew_activities
         order by flight_id ASC
-        LIMIT 3500,500
+        LIMIT 3825,1
     </select>
 
-    <select id="alpha1select" resultType="hashmap">
-        SELECT * FROM `apportal_application`.ap_crew_activities
-        order by flight_id ASC
-        LIMIT 0,20
-    </select>
-
-    <select id="test2" resultType="hashmap">
-        SELECT * FROM `apportal_application`.CommonService
-        limit 1
-    </select>
 
     <insert id="alpha1insert" parameterType="hashmap">
         INSERT INTO `apportal_application`.ap_crew_activities
