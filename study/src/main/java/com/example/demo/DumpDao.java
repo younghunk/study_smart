@@ -1,4 +1,4 @@
-package com.example.demo.DAO;
+package com.example.demo;
 
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-public class BoardDao {
+public class DumpDao {
 
-    Logger logger = LoggerFactory.getLogger(BoardDao.class);
+    Logger logger = LoggerFactory.getLogger(DumpDao.class);
 
-    private static final String BoardMapper = "BoardMapper";
+    private static final String BoardMapper = "DumpMapper";
 
     @Autowired
     @Qualifier(value = "apSqlSession")

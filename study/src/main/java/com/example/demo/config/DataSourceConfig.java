@@ -29,6 +29,19 @@ public class DataSourceConfig {
     public DataSource ap2DataSource() {
     	return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
-    
-   
+
+
+    @Bean
+    @ConfigurationProperties("spring.datasource.hikari.ap")
+    public DataSource apDataSource1() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+    @Bean
+    @ConfigurationProperties("spring.datasource.hikari.ap2")
+    public DataSource apDataSource2() {
+        return DataSourceBuilder.create().type(HikariDataSource.class).build();
+    }
+
+
 }
