@@ -30,7 +30,6 @@ public class DataSourceConfig {
     	return DataSourceBuilder.create().type(HikariDataSource.class).build();
     }
 
-
     @Bean
     @ConfigurationProperties("spring.datasource.hikari.ap")
     public DataSource apDataSource1() {
