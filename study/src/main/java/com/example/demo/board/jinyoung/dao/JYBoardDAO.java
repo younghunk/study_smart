@@ -1,7 +1,6 @@
 package com.example.demo.board.jinyoung.dao;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,31 @@ public class JYBoardDAO {
 		int n = JYsqlsession.update("jinyoung.subjectChange", paraMap);
 		
 		return n;
+	}
+
+	// 그리드에서 새 게시물 생성
+	public int createNewPost(Map<String, String> paraMap) {
+		int n = JYsqlsession.insert("jinyoung.createNewPost", paraMap);
+		
+		return n;
+	}
+
+	// 그리드에서 게시물 수정
+	public int updatePost(Map<String, String> paraMap) {
+		int n = JYsqlsession.update("jinyoung.updatePost", paraMap);
+		return n;
+	}
+
+	// 그리드에서 게시물 삭제
+	public int deletePost(String seq) {
+		int n = JYsqlsession.update("jinyoung.deletePost", seq);
+		return n;
+	}
+
+	// 원글 조회
+	public JYBoardVO orgPost(String seq) {
+		JYBoardVO orgPost = JYsqlsession.selectOne("jinyoung.orgPost", seq);
+		return orgPost;
 	}
 	
 }

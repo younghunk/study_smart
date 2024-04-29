@@ -85,6 +85,49 @@
 	</update>
 	
 	
+	<!-- 그리드에서 새 게시물 생성 -->
+	<insert id="createNewPost" parameterType="HashMap">
+	<choose>
+		<when test="date != ''">
+			INSERT INTO Board.tbl_board (userid, subject, content, date)
+			VALUES (#{userid}, #{subject}, #{content}, #{date})
+		</when>
+		<otherwise>
+			INSERT INTO Board.tbl_board (userid, subject, content, date)
+			VALUES (#{userid}, #{subject}, #{content}, null)
+		</otherwise>
+	</choose>
+	</insert>
+	
+	
+	<!-- 그리드에서 게시물 수정 -->
+	<update id="updatePost" parameterType="HashMap">
+	<choose>
+		<when test="date != ''">
+			UPDATE Board.tbl_board SET subject = #{subject}, content = #{content}, date = #{date}, userid = #{userid}
+			WHERE seq = #{seq}
+		</when>
+		<otherwise>
+			UPDATE Board.tbl_board SET subject = #{subject}, content = #{content}, date = null, userid = #{userid}
+			WHERE seq = #{seq}
+		</otherwise>
+	</choose>
+	</update>
+	
+	
+	<!-- 그리드에서 게시물 삭제 -->
+	<update id="deletePost" parameterType="String">
+		UPDATE Board.tbl_board SET status = 0
+		WHERE seq = #{seq}
+	</update>
+	
+	
+	<!-- 원글 조회 -->
+	<select id="orgPost" parameterType="String" resultType="com.example.demo.board.jinyoung.vo.JYBoardVO">
+		SELECT *
+		FROM Board.tbl_board
+		WHERE seq = #{seq}
+	</select>
 	
 	
 </mapper>

@@ -6,20 +6,23 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.board.jinyoung.service.JYBoardService;
 import com.example.demo.board.jinyoung.vo.JYBoardVO;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 
 
 
 @Controller
+@RequestMapping("/jinyoung")
 public class JYBoardController {
 
 	
@@ -36,7 +39,7 @@ public class JYBoardController {
 	}
 	
 	// 메인페이지 요청
-	@GetMapping("list.action")
+	@RequestMapping("list.action")
 	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
 		
 		mav.setViewName("board/jinyoung/list");
@@ -222,6 +225,112 @@ public class JYBoardController {
         else {
         	return "";
         }
+	}
+	
+	
+	// 그리드에서 새 게시물 생성
+	@PostMapping("createNewPost.action")
+	@ResponseBody
+	public String createNewPost(HttpServletRequest request, Model model) {
+
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String date = request.getParameter("date");
+		String userid = request.getParameter("userid");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		paraMap.put("date", date);
+		paraMap.put("userid", userid);
+		
+		try {
+			int n = service.createNewPost(paraMap, model);
+			if (n == 1) {
+				return "jsonView";
+			}
+			else {
+				return "오류발생 insert 실패";
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 내용을 콘솔에 출력
+			return "오류발생 insert 실패";
+		}
+	}
+	
+	
+	// 그리드에서 새 게시물 생성
+	@PostMapping("updatePost.action")
+	@ResponseBody
+	public String updatePost(HttpServletRequest request, Model model) {
+
+		String subject = request.getParameter("subject");
+		String content = request.getParameter("content");
+		String date = request.getParameter("date");
+		String userid = request.getParameter("userid");
+		String seq = request.getParameter("seq");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("subject", subject);
+		paraMap.put("content", content);
+		paraMap.put("date", date);
+		paraMap.put("userid", userid);
+		paraMap.put("seq", seq);
+		
+		try {
+			int n = service.updatePost(paraMap, model);
+			if (n == 1) {
+				return "jsonView";
+			}
+			else {
+				return "오류발생 update 실패";
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 내용을 콘솔에 출력
+			return "오류발생 update 실패";
+		}
+		
+	}
+		
+	
+	// 그리드에서 게시물 삭제
+	@PostMapping("deletePost.action")
+	@ResponseBody
+	public String deletePost(HttpServletRequest request, Model model) {
+
+		String seq = request.getParameter("seq");
+		
+		try {
+			int n = service.deletePost(seq, model);
+			if (n == 1) {
+				return "jsonView";
+			}
+			else {
+				return "오류발생 delete 실패";
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 내용을 콘솔에 출력
+			return "오류발생 delete 실패";
+		}
+		
+	}	
+	
+	
+	@RequestMapping("reply.action")
+	public ModelAndView reply(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = request.getParameter("seq");
+		
+		// 원글 조회
+		JYBoardVO orgPost = service.orgPost(seq);
+		
+		mav.addObject("orgPost", orgPost);
+		mav.setViewName("board/jinyoung/reply");
+		
+		return mav;
+		
 	}
 	
 	

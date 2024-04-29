@@ -1,10 +1,10 @@
 package com.example.demo.board.jinyoung.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.example.demo.board.jinyoung.dao.JYBoardDAO;
 import com.example.demo.board.jinyoung.vo.JYBoardVO;
@@ -69,6 +69,68 @@ public class JYBoardService {
 		int n = dao.subjectChange(paraMap);
 		
 		return n;
+	}
+
+	// 그리드에서 새 게시물 생성
+	public int createNewPost(Map<String, String> paraMap, Model model) {
+
+		int n = dao.createNewPost(paraMap);
+		
+		try {
+			if(n==1) {
+				model.addAttribute("status", "success");
+			}
+		} catch (Exception e) {
+			model.addAttribute("status", "error");
+			model.addAttribute("cause", e.getCause());
+		}
+		
+		return n;
+		
+	}
+
+	// 그리드에서 게시물 수정
+	public int updatePost(Map<String, String> paraMap, Model model) {
+
+		int n = dao.updatePost(paraMap);
+		
+		try {
+			if(n==1) {
+				model.addAttribute("status", "success");
+			}
+		} catch (Exception e) {
+			model.addAttribute("status", "error");
+			model.addAttribute("cause", e.getCause());
+		}
+		
+		return n;
+		
+	}
+
+	// 그리드에서 게시물 삭제
+	public int deletePost(String seq, Model model) {
+		
+		int n = dao.deletePost(seq);
+		
+		try {
+			if(n==1) {
+				model.addAttribute("status", "success");
+			}
+		} catch (Exception e) {
+			model.addAttribute("status", "error");
+			model.addAttribute("cause", e.getCause());
+		}
+		
+		return n;
+		
+	}
+
+	// 원글 조회
+	public JYBoardVO orgPost(String seq) {
+
+		JYBoardVO orgPost = dao.orgPost(seq);
+		
+		return orgPost;
 	}
 	
 }
