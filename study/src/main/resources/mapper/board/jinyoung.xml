@@ -16,29 +16,38 @@
 	
 	<!-- 전체 게시글 조회 -->
 	<select id="boardList" parameterType="HashMap" resultType="com.example.demo.board.jinyoung.vo.JYBoardVO">
-		SELECT *
-		FROM Board.tbl_board
+		WITH RECURSIVE RecursiveQuery AS (
+		    SELECT seq, userid, subject, content, readCount, regDate, status, date, commentCount, groupno, fk_seq, depthno
+		    FROM Board.tbl_board
+		    WHERE status = 1 AND fk_seq = 0 -- 시작 조건
+		    <choose>
+				<!-- 제목으로 검색할 때 -->
+				<when test="searchType == 'subject' and searchWord != ''">
+					and lower(subject) like concat('%', lower(#{searchWord}), '%')
+				</when>
+				<!-- 내용으로 검색할 때 -->
+				<when test="searchType == 'content' and searchWord != ''">
+					and lower(content) like concat('%', lower(#{searchWord}), '%')
+				</when>
+				<!-- 제목 또는 내용 -->
+				<when test="searchType == 'subject_content' and searchWord != ''">
+					and (lower(subject) like concat('%', lower(#{searchWord}), '%') OR lower(content) like concat('%' , lower(#{searchWord}) , '%'))
+				</when>
+				<!-- 아이디로 검색 -->
+				<when test="searchType == 'userid' and searchWord != ''">
+					and lower(userid) like concat('%', lower(#{searchWord}), '%')
+				</when>
+				<otherwise></otherwise>
+			</choose>
+		    UNION ALL
+		    SELECT b.seq, b.userid, b.subject, b.content, b.readCount, b.regDate, b.status, b.date, b.commentCount, b.groupno, b.fk_seq, b.depthno
+		    FROM Board.tbl_board b
+		    INNER JOIN RecursiveQuery r ON b.fk_seq = r.seq -- 재귀 조인
+		)
+		SELECT seq, userid, subject, content, readCount, regDate, status, date, commentCount, groupno, fk_seq, depthno
+		FROM RecursiveQuery
 		WHERE status = 1
-		<choose>
-			<!-- 제목으로 검색할 때 -->
-			<when test="searchType == 'subject' and searchWord != ''">
-				and lower(subject) like concat('%', lower(#{searchWord}), '%')
-			</when>
-			<!-- 내용으로 검색할 때 -->
-			<when test="searchType == 'content' and searchWord != ''">
-				and lower(content) like concat('%', lower(#{searchWord}), '%')
-			</when>
-			<!-- 제목 또는 내용 -->
-			<when test="searchType == 'subject_content' and searchWord != ''">
-				and (lower(subject) like concat('%', lower(#{searchWord}), '%') OR lower(content) like concat('%' , lower(#{searchWord}) , '%'))
-			</when>
-			<!-- 아이디로 검색 -->
-			<when test="searchType == 'userid' and searchWord != ''">
-				and lower(userid) like concat('%', lower(#{searchWord}), '%')
-			</when>
-			<otherwise></otherwise>
-		</choose>
-		ORDER BY seq desc
+		ORDER BY groupno DESC, seq ASC
 	</select>
 	
 	
@@ -57,10 +66,10 @@
 	</update>
 	
 	
-	<!-- 글쓰기 요청 완료 -->
+	<!-- 답글쓰기 요청 완료 -->
 	<insert id="addEnd" parameterType="HashMap">
-		INSERT into Board.tbl_board (userid, subject, content)
-		VALUES (#{userid}, #{subject}, #{content})
+		insert into tbl_board(userid, subject, content, groupno, fk_seq, depthno)
+		values(#{userid}, #{subject}, #{content}, #{groupno}, #{fk_seq}, #{depthno}+1) 
 	</insert>
 	
 	
@@ -87,16 +96,8 @@
 	
 	<!-- 그리드에서 새 게시물 생성 -->
 	<insert id="createNewPost" parameterType="HashMap">
-	<choose>
-		<when test="date != ''">
-			INSERT INTO Board.tbl_board (userid, subject, content, date)
-			VALUES (#{userid}, #{subject}, #{content}, #{date})
-		</when>
-		<otherwise>
-			INSERT INTO Board.tbl_board (userid, subject, content, date)
-			VALUES (#{userid}, #{subject}, #{content}, null)
-		</otherwise>
-	</choose>
+		INSERT INTO Board.tbl_board (userid, subject, content, date, groupno)
+		VALUES (#{userid}, #{subject}, #{content}, #{date}, #{groupno})
 	</insert>
 	
 	
@@ -122,11 +123,10 @@
 	</update>
 	
 	
-	<!-- 원글 조회 -->
-	<select id="orgPost" parameterType="String" resultType="com.example.demo.board.jinyoung.vo.JYBoardVO">
-		SELECT *
-		FROM Board.tbl_board
-		WHERE seq = #{seq}
+	<!-- 테이블에서 groupno 컬럼의 최대값 알아오기 -->
+	<select id="getGroupnoMax" resultType="int">
+		select nvl(max(groupno), 0)
+	    from Board.tbl_board
 	</select>
 	
 	

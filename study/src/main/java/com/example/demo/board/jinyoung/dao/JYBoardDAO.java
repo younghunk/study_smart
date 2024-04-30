@@ -40,10 +40,10 @@ public class JYBoardDAO {
 		return n;
 	}
 
-	// 글쓰기 요청 완료
-	public int addEnd(Map<String, String> paraMap) {
+	// 답글쓰기 요청 완료
+	public int addEnd(JYBoardVO boardvo) {
 		
-		int n = JYsqlsession.insert("jinyoung.addEnd", paraMap);
+		int n = JYsqlsession.insert("jinyoung.addEnd", boardvo);
 		
 		return n;
 	}
@@ -73,7 +73,7 @@ public class JYBoardDAO {
 	}
 
 	// 그리드에서 새 게시물 생성
-	public int createNewPost(Map<String, String> paraMap) {
+	public int createNewPost(Map<String, Object> paraMap) {
 		int n = JYsqlsession.insert("jinyoung.createNewPost", paraMap);
 		
 		return n;
@@ -91,10 +91,10 @@ public class JYBoardDAO {
 		return n;
 	}
 
-	// 원글 조회
-	public JYBoardVO orgPost(String seq) {
-		JYBoardVO orgPost = JYsqlsession.selectOne("jinyoung.orgPost", seq);
-		return orgPost;
+	// 테이블에서 groupno 컬럼의 최대값 알아오기
+	public int getGroupnoMax() {
+		int maxgrouno = JYsqlsession.selectOne("jinyoung.getGroupnoMax");
+		return maxgrouno;
 	}
-	
+
 }

@@ -41,22 +41,8 @@ table {
 	text-align: left;
 	overflow-x: hidden;
 	
-/* 생성일 경우 파란색 */
-.create-row {
-    background-color: blue !important;
 }
 
-/* 수정일 경우 노란색 */
-.update-row {
-    background-color: yellow !important;
-}
-
-/* 삭제일 경우 회색 */
-.delete-row {
-    background-color: gray !important;
-}	
-	
-}
 </style>
 
 </head>
@@ -85,12 +71,12 @@ $(document).ready(function(){
 		ajaxGridOptions: {cache: false}, // Ajax 요청 시 캐시를 사용하지 않고 최신 데이터를 가져오게 한다.
 		postData: $('#grid').serializeArray(),
 		mtype : "GET",
-		colNames: ['글번호', '제목', '내용', '캘린더', '아이디', '작성일', '타입'],
+		colNames: ['글번호', '제목', '내용', '캘린더', '아이디', '작성일', '타입', 'groupno', 'fk_seq', 'depthno'],
 		colModel: [
 			{name:'seq',		index:'seq', 		align:'center',	width:'5%', 	sortable: false },
 			{name:'subject',	index:'subject', 	align:'left',	width:'15%',	sortable: false, editable: true , required: true },
-			{name:'content',	index:'content', 	align:'left',	width:'15%',	sortable: false, editable: true , required: true },
-			{name:'date',		index:'date', 		align:'center',	width:'20%',	sortable: false, 
+			{name:'content',	index:'content', 	align:'left',	width:'25%',	sortable: false, editable: true , required: true },
+			{name:'date',		index:'date', 		align:'center',	width:'15%',	sortable: false, 
 				editable:true, edittype: 'custom',
                    editoptions: {
                        custom_element:Calendar,
@@ -106,93 +92,22 @@ $(document).ready(function(){
                    }
 			},
 			{name:'userid',		index:'userid', 	align:'center',	width:'10%', 	sortable: false, editable: true, required: true },
-			{name:'regDate',	index:'regDate', 	alwign:'center',	width:'15%', 	sortable: false },
-			{name: 'type',		index: 'type', 		align:'center', width: 5,		sorttype: 'text', hidden: true, editable: false },
+			{name:'regDate',	index:'regDate', 	alwign:'center',	width:'10%', 	sortable: false },
+			{name:'type',		index: 'type', 		align:'center', width: 5,		sorttype: 'text', hidden: true, editable: false },
+			{name:'groupno',	index:'groupno', 	alwign:'center',	width:'15%', 	sortable: false, hidden: true, editable: false },
+			{name:'fk_seq',		index:'fk_seq', 	alwign:'center',	width:'15%', 	sortable: false, hidden: true, editable: false },
+			{name:'depthno',	index:'depthno', 	alwign:'center',	width:'15%', 	sortable: false, hidden: true, editable: false },
 			],
 		rowNum : 200,
 		loadonce : false,
 		height: 700,
-		width: 900,
+		width: 1300,
 		multiselect: true,
 		beforeSelectRow: fn_BeforeSelectRow,
-		rowattr: function (rd) {
-	        var type = rd.type; // 각 행의 타입 가져오기
-	        switch (type) {
-	            case 'create':
-	                return { "class": "create-row" }; // 생성일 경우 파란색 클래스 적용
-	            case 'update':
-	                return { "class": "update-row" }; // 수정일 경우 노란색 클래스 적용
-	            case 'delete':
-	                return { "class": "delete-row" }; // 삭제일 경우 회색 클래스 적용
-	            default:
-	                return {}; // 기본적으로는 아무 클래스도 적용하지 않음
-	        }
-		}
-<%--	cellurl: '<%=ctxPath%>subjectChange.action',
-		onSelectRow : function(rowId, iRow, iCol, e) {
-			// 행의 키값과 밸류를 얻어온다.
-			var rowdata = $("#grid").getRowData(rowId);
-			console.log(rowdata);
-			
-			// seq키 값의 밸류를 얻어온다.
-			var seq = rowdata.seq;
-			console.log(seq);
-			
-			//location.href='<%=ctxPath %>/view.action?seq='+seq;
-		},
-		gridComplete: function() { // 마우스오버 이벤트
-			var $grid = $("#grid");
-	        var rows = $grid.getDataIDs();
-	        $.each(rows, function (index, rowId) {
-	            $grid.setRowData(rowId, false, { cursor: 'pointer' });
-	        });
-		},
-		ondblClickRow : function(rowId, iRow, iCol, e) { // 더블클릭시 수정 이벤트
-				
-			const rowdata = $("#grid").getRowData(rowId);
-			console.log(rowdata);
-			
-			const colModels = $(this).getGridParam('colModel'); 
-			const colName = colModels[iCol].name;
-			console.log(colName);
-			
-			if((colName=='subject')){
-				$(this).setColProp(colName, {editable : true}); //gridColModel의 name값이 subject인 cell을 수정가능하게 해줌 
-				$(this).editCell(iRow, iCol, true); 
-			}
-		},
-		beforeSubmitCell : function (rowid, cellName, value, iRow, iCol){ // url 전송 전 데이터 추가 부분
-			
-			console.log("수정 전 데이터:", rowid, cellName, value);
-			
-			// 수정된 제목의 값과 해당 행의 seq 값을 가져온다.
-		    const rowdata = $("#grid").getRowData(rowid);
-			const seq = rowdata.seq;
-		
-			console.log("seq => ", seq);
-			
-		    if (cellName === 'subject') {
-		        if (confirm("정말로 제목을 수정하시겠습니까?")) {
-		            // 사용자가 확인을 클릭한 경우, 수정을 허용하고 true를 반환하여 서버로 데이터를 전송
-		        	return { id: rowid, cellName: cellName, cellValue: value, seq: seq};
-		        	// subject 컬럼의 값만 보내주기 때문에 seq 값도 같이 보내준다.
-		        } else {
-		            // 사용자가 취소를 클릭한 경우, 수정을 거부하고 false를 반환하여 변경을 취소
-		            return false;
-		        }
-		    } else {
-		        // 다른 셀의 수정은 허용합니다.
-		        return true;
-		    }
-        }, 
-        afterSubmitCell : function (serverresponse, rowid, name, val, iRow, iCol){
-          if(serverresponse.responseText=='success'){
-                return [true, ""];
-            }else{
-                return [false, alert("에러발생 :"+ serverresponse.responseText)];
-            } 
-        }--%>
-			
+		loadComplete: function() {
+	        addSpan();
+	    }
+
 	});// end of jqGrid ----------------------------------------------------------------------------------------------------
 	
 	
@@ -300,7 +215,7 @@ $(document).ready(function(){
 							type: 'post',
 							contentType: 'application/x-www-form-urlencoded',
 							data: serializedData,
-							success: function(response) {
+							success: function(json) {
 								console.log(JSON.stringify(json));
 							},
 							erorr: function(request, status, error) {
@@ -362,7 +277,7 @@ $(document).ready(function(){
 		var selectedRowId = $("#grid").jqGrid('getGridParam', 'selarrrow'); 
 		
 		// 선택된 행이 있고 행배열의 길이가 1이라면 (=체크된 행이 하나라면)
-	    if (selectedRowId && selectedRowId.length > 1) {
+	    if (selectedRowId && selectedRowId.length > 0) {
 	    	if(confirm("정말로 취소하시겠습니까?")) {
 				$("#grid").trigger("reloadGrid");
 			}
@@ -370,7 +285,6 @@ $(document).ready(function(){
 	    else {
 	    	return;
 	    }
-		
 		
 	});// end of $("#reset").click(function(){}-------------------------------------------------------------------------------------------
 	
@@ -385,12 +299,36 @@ $(document).ready(function(){
 	function Calendar(value, options) {
 	    var rowId = options.id;
 	    var str = "";
-	    str += '<input type="text" readonly class="input02" value="' + value + '"/>';
+	    str += '<input type="text" readonly style="width= 40px;" value="' + value + '"/>';
 	    str += '<img class="btnCalendar" src="/resources/images/calendar.png"/>';
 	    str += '<button type="button" class="btn btn-danger" onclick="fn_clearDate(\'' + rowId + '\');">x</button>';
 	    return str;
 	}
 	
+	
+	// 그리드 로드 후 각 행의 depthno 값에 따라 subject 셀에 특정 태그 추가
+	function addSpan() {
+	    var grid = $("#grid");
+	    var rows = grid.jqGrid("getDataIDs");
+	    
+	    rows.forEach(function(rowId) {
+	        var rowData = grid.jqGrid("getRowData", rowId);
+	        var depthno = parseInt(rowData.depthno);
+	        var subjectCell = grid.jqGrid("getCell", rowId, "subject");
+	        var reTag = "";
+	        
+	        if (depthno >= 1) {
+	            var reTagCount = depthno; // depthno 만큼 Re 태그를 추가
+	            for (var i = 0; i < reTagCount; i++) {
+	                reTag += '<span style="color: red; font-style: italic;">┗Re&nbsp;</span>';
+	            }
+	        }
+	        
+	        // 기존 셀 내용과 Re 태그를 합쳐서 셀에 설정
+	        grid.jqGrid("setCell", rowId, "subject", reTag + subjectCell);
+	    });
+	}
+
 });// end of $(document).ready(function(){})------
 	
 	  
@@ -465,11 +403,14 @@ function goWriteReply() {
 	
 	var rowData = $("#grid").jqGrid('getRowData', selectedRowId);
 	
-	var seq = rowData.seq;
+	var subject = rowData.subject;
+	var groupno = rowData.groupno;
+	var fk_seq = rowData.seq;
+	var depthno = rowData.depthno;
 	
 	// 선택된 행이 있고 행배열의 길이가 1이라면 (=체크된 행이 하나라면)
     if (selectedRowId && selectedRowId.length == 1) {
-    	window.open('<%=ctxPath%>/jinyoung/reply.action?seq='+seq, 'pop', 'width=700,height=400');
+    	window.open('<%=ctxPath%>/jinyoung/reply.action?subject='+subject+'&groupno='+groupno+'&fk_seq='+fk_seq+'&depthno='+depthno, 'pop', 'width=600,height=400');
    	}
     else if (selectedRowId && selectedRowId.length > 1) {
     	alert("답글을 달기 위한 게시물을 하나만 선택해주십시오.");
@@ -496,7 +437,7 @@ function goWriteReply() {
 	  
 </script>
 
-	<div style="display: flex;">
+	<div style="display: flex; width: 100%;">
 		<div style="margin: auto;">
 			<h2 style="margin-bottom: 30px;">글목록</h2>
 			

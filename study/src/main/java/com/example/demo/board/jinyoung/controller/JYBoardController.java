@@ -105,33 +105,19 @@ public class JYBoardController {
 		
 	}
 	
-	// 글쓰기 요청 완료
+	// 답글쓰기 요청 완료
 	@PostMapping("addEnd.action")
-	public ModelAndView addEnd(ModelAndView mav, HttpServletRequest request) {
+	@ResponseBody
+	public String addEnd(JYBoardVO boardvo) {
 		
-		String userid = request.getParameter("userid");
-		String subject = request.getParameter("subject");
-		String content = request.getParameter("content");
+		int n = service.addEnd(boardvo);
 		
-		Map<String, String> paraMap = new HashMap<>();
-		
-		paraMap.put("userid", userid);
-		paraMap.put("subject", subject);
-		paraMap.put("content", content);
-		
-		int n = service.addEnd(paraMap);
-		
-		if (n == 0) {
-			mav.addObject("msg", "글쓰기에 실패했습니다.");
-			mav.addObject("loc", "/add.action");
+		if (n == 1) {
+			return "success";
 		}
 		else {
-			mav.addObject("msg", "글쓰기에 성공했습니다.");
-			mav.addObject("loc", "/list.action");
+			return "false";
 		}
-		
-		mav.setViewName("board/jinyoung/msg");
-		return mav;
 		
 	}
 	
@@ -238,12 +224,19 @@ public class JYBoardController {
 		String date = request.getParameter("date");
 		String userid = request.getParameter("userid");
 		
-		Map<String, String> paraMap = new HashMap<>();
+		if(date == "") {
+			date = null;
+		}
+		
+		int groupno = service.getGroupnoMax()+1;
+		
+		Map<String, Object> paraMap = new HashMap<>();
 		
 		paraMap.put("subject", subject);
 		paraMap.put("content", content);
 		paraMap.put("date", date);
 		paraMap.put("userid", userid);
+		paraMap.put("groupno", groupno);
 		
 		try {
 			int n = service.createNewPost(paraMap, model);
@@ -321,12 +314,20 @@ public class JYBoardController {
 	@RequestMapping("reply.action")
 	public ModelAndView reply(ModelAndView mav, HttpServletRequest request) {
 		
-		String seq = request.getParameter("seq");
+		String subject = "[답변]" + request.getParameter("subject");
+		String groupno = request.getParameter("groupno");
+		String fk_seq = request.getParameter("fk_seq");
+		String depthno = request.getParameter("depthno");
 		
-		// 원글 조회
-		JYBoardVO orgPost = service.orgPost(seq);
+		if(fk_seq == null) {
+			fk_seq = "";
+		}
 		
-		mav.addObject("orgPost", orgPost);
+		mav.addObject("subject", subject);
+		mav.addObject("groupno", groupno);
+		mav.addObject("fk_seq", fk_seq);
+		mav.addObject("depthno", depthno);
+		
 		mav.setViewName("board/jinyoung/reply");
 		
 		return mav;

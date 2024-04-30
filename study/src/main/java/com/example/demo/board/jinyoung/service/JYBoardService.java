@@ -33,16 +33,16 @@ public class JYBoardService {
 		int n = dao.increase_readCount(seq);
 		
 		if(n == 1) {
-			boardvo.setReadCount(String.valueOf(Integer.parseInt(boardvo.getReadCount())+1));
+			boardvo.setReadCount(boardvo.getReadCount()+1);
 		}
 		
 		return boardvo;
 	}
 	
-	// 글쓰기 요청 완료
-	public int addEnd(Map<String, String> paraMap) {
-
-		int n = dao.addEnd(paraMap);
+	// 답글쓰기 요청 완료
+	public int addEnd(JYBoardVO boardvo) {
+		
+		int n = dao.addEnd(boardvo);
 		
 		return n;
 	}
@@ -72,7 +72,7 @@ public class JYBoardService {
 	}
 
 	// 그리드에서 새 게시물 생성
-	public int createNewPost(Map<String, String> paraMap, Model model) {
+	public int createNewPost(Map<String, Object> paraMap, Model model) {
 
 		int n = dao.createNewPost(paraMap);
 		
@@ -125,12 +125,12 @@ public class JYBoardService {
 		
 	}
 
-	// 원글 조회
-	public JYBoardVO orgPost(String seq) {
-
-		JYBoardVO orgPost = dao.orgPost(seq);
+	// 테이블에서 groupno 컬럼의 최대값 알아오기
+	public int getGroupnoMax() {
 		
-		return orgPost;
+		int maxgrouno = dao.getGroupnoMax();
+		
+		return maxgrouno;
 	}
-	
+
 }
