@@ -79,9 +79,9 @@ $(document).ready(function(){
 			<button type="button" class="btn btn-secondary btn-sm mr-3" id="btnWrite">글쓰기</button>
 		</div>
 	
-		<input type="text" name="groupno" value="${requestScope.groupno}" />
-		<input type="text" name="fk_seq" value="${requestScope.fk_seq}" />
-		<input type="text" name="depthno" value="${requestScope.depthno}" />
+		<input type="hidden" name="groupno" value="${requestScope.groupno}" />
+		<input type="hidden" name="fk_seq" value="${requestScope.fk_seq}" />
+		<input type="hidden" name="depthno" value="${requestScope.depthno}" />
 
 	</form>
 	

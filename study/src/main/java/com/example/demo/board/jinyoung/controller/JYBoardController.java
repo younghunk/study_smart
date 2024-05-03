@@ -194,9 +194,6 @@ public class JYBoardController {
 	@ResponseBody
 	public String subjectChange(@RequestParam("subject") String subject,
 	                       		@RequestParam("seq") String seq) {
-		// jsp에서 subject 컬럼의 값만 보내주기 때문에 seq 값도 같이 보내줘서 받는다
-        System.out.println("수정된 셀 컬럼 이름: " + subject);
-        System.out.println("수정할 셀의 seq 값: " + seq);
 
         Map<String, String> paraMap = new HashMap<>();
         
@@ -314,7 +311,7 @@ public class JYBoardController {
 	@RequestMapping("reply.action")
 	public ModelAndView reply(ModelAndView mav, HttpServletRequest request) {
 		
-		String subject = "[답변]" + request.getParameter("subject");
+		String subject = "답변_" + request.getParameter("subject");
 		String groupno = request.getParameter("groupno");
 		String fk_seq = request.getParameter("fk_seq");
 		String depthno = request.getParameter("depthno");

@@ -103,10 +103,11 @@ $(document).ready(function(){
 		height: 700,
 		width: 1300,
 		multiselect: true,
-		beforeSelectRow: fn_BeforeSelectRow,
+		beforeSelectRow: fn_BeforeSelectRow
+		/* ,
 		loadComplete: function() {
 	        addSpan();
-	    }
+	    } */
 
 	});// end of jqGrid ----------------------------------------------------------------------------------------------------
 	
@@ -151,7 +152,7 @@ $(document).ready(function(){
 					// 현재 행의 type 의 값이 'create' 또는 'delete'가 아니라면,
                     if(typeValue !== 'create' && typeValue !== 'delete') {
                     	// type 값에 update 를 부여 => 다중 생성, 수정, 삭제 구분
-                    	$("#grid").jqGrid('setCell', currentEditingRowId, 'type', 'update'); 
+                    	$("#grid").jqGrid('setCell', currentEditingRowId, 'type', 'update');
                     }
             	}
             }
@@ -170,7 +171,8 @@ $(document).ready(function(){
 					// 현재 행의 type 의 값이 'create' 또는 'update'가 아니라면,
                     if(typeValue !== 'create' && typeValue !== 'update') {
                     	// type 값에 delete 를 부여 => 다중 생성, 수정, 삭제 구분
-                    	$("#grid").jqGrid('setCell', willDeleteRowId, 'type', 'delete'); 
+                    	$("#grid").jqGrid('setCell', willDeleteRowId, 'type', 'delete');
+                    	$("#grid").setRowData(willDeleteRowId, false, {background:"#ff0000"}); // 생성시 행의 색상을 빨간색으로 변경해 이벤트 종류가 무엇인지 구별
                     }
             	}
             }
@@ -305,7 +307,7 @@ $(document).ready(function(){
 	    return str;
 	}
 	
-	
+	/* 
 	// 그리드 로드 후 각 행의 depthno 값에 따라 subject 셀에 특정 태그 추가
 	function addSpan() {
 	    var grid = $("#grid");
@@ -328,6 +330,7 @@ $(document).ready(function(){
 	        grid.jqGrid("setCell", rowId, "subject", reTag + subjectCell);
 	    });
 	}
+	 */
 
 });// end of $(document).ready(function(){})------
 	
@@ -439,12 +442,12 @@ function goWriteReply() {
 
 	<div style="display: flex; width: 100%;">
 		<div style="margin: auto;">
-			<h2 style="margin-bottom: 30px;">글목록</h2>
+			<h2 style="margin: 30px 0 30px 0;">글목록</h2>
 			
 			<div style="margin-bottom: 10px;">
 
 				<select id="ddl" style="width: 80px;">
-					<option value="blank"></option>
+					<option value="blank">선택</option>
 					<option value="create">생성</option>
 					<option value="update">수정</option>
 					<option value="delete">삭제</option>
