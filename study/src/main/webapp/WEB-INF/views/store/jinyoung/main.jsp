@@ -31,9 +31,15 @@ html, body {  height: 100%;  background: #ffffff; }
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$("button#socialLogin").click(function(){
+	$("button#googleLogin").click(function(){
 		
 		location.href="/oauth2/authorizaiton/google";
+		
+	});
+	
+	$("button#naverLogin").click(function(){
+		
+		location.href="/oauth2/authorizaiton/naver";
 		
 	});
 	
@@ -55,8 +61,9 @@ $(document).ready(function(){
 	          	<span>비밀번호 </span><input type="password" name="user_pwd" class="form-control">
 	          </div>
 	          <div class="button-login-box" >
-	            <button id= "localLogin" type="button" class="btn btn-primary btn-xs" style="width:49%">로그인</button>
-	            <button id= "socialLogin" type="button" class="btn btn-primary btn-xs" style="width:49%">소셜로그인</button>
+	            <button id= "localLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">로그인</button>
+	            <button id= "googleLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">구글로그인</button>
+	            <button id= "naverLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">네이버로그인</button>
 	          </div>
 	        </div>
 		</form>
