@@ -19,7 +19,7 @@ String ctxPath = request.getContextPath();
 * { padding: 0; margin: 0; }
 html, body {  height: 100%;  background: #ffffff; }
 #container {  display: flex;  flex-direction: row;  justify-content: center;  align-items: center;  height: 100%; }
-#loginBox {  width: 300px;  text-align: center;  background-color: #ffffff; }
+#loginBox {  width: 400px;  text-align: center;  background-color: #ffffff; }
 .input-form-box {  border: 0px solid #ff0000;  display: flex;  margin-bottom: 5px; }
 .input-form-box > span {  display: block;  text-align: left;  padding-top: 5px;  min-width: 65px; }
 .button-login-box {  margin: 10px 0; }
@@ -33,13 +33,13 @@ $(document).ready(function(){
 	
 	$("button#googleLogin").click(function(){
 		
-		location.href="/oauth2/authorizaiton/google";
+		location.href="/oauth2/authorization/google";
 		
 	});
 	
 	$("button#naverLogin").click(function(){
 		
-		location.href="/oauth2/authorizaiton/naver";
+		location.href="/oauth2/authorization/naver";
 		
 	});
 	
@@ -61,9 +61,9 @@ $(document).ready(function(){
 	          	<span>비밀번호 </span><input type="password" name="user_pwd" class="form-control">
 	          </div>
 	          <div class="button-login-box" >
-	            <button id= "localLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">로그인</button>
-	            <button id= "googleLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">구글로그인</button>
-	            <button id= "naverLogin" type="button" class="btn btn-primary btn-xs" style="width:33%">네이버로그인</button>
+	            <button id= "localLogin" type="button" class="btn btn-primary btn-xs" style="width:30%">로그인</button>
+	            <button id= "googleLogin" type="button" class="btn btn-primary btn-xs" style="width:30%">구글</button>
+	            <button id= "naverLogin" type="button" class="btn btn-primary btn-xs" style="width:30%">네이버</button>
 	          </div>
 	        </div>
 		</form>

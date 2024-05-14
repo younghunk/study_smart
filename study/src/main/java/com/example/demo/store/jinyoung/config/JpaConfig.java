@@ -1,16 +1,6 @@
 package com.example.demo.store.jinyoung.config;
 
-import java.util.Map;
-
-import javax.persistence.Cache;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnitUtil;
-import javax.persistence.Query;
-import javax.persistence.SynchronizationType;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.metamodel.Metamodel;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;

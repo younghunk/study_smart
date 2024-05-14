@@ -1,23 +1,33 @@
 package com.example.demo.store.jinyoung.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
-@Table(name="USER")
+@Getter
+@Setter
+@Table(name="user")
 public class UserEntity {
 	
 	@Id
+	@Column(name = "id", insertable = false, updatable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "id", insertable = false, updatable = false)
 	private String username;
 	
+	@Column(name = "id", insertable = false, updatable = false)
 	private String email;
 	
+	@Column(name = "id", insertable = false, updatable = false)
 	private String role;
 
 	public Long getId() {
