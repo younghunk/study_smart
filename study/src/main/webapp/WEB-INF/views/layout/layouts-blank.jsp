@@ -1,11 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="t" uri="http://tiles.apache.org/tags-tiles"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 </head>
-<body>ttttttttttt
-	<t:insertAttribute name="content"/>
+<body>
+	<header id="header">
+		<tiles:insertAttribute name="header"/>
+	</header>
+
+	<div id="content">
+		<tiles:insertAttribute name="content"/>
+	</div>
+
 </body>
 </html>

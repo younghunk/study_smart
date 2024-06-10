@@ -3,17 +3,20 @@
 
 <tiles-definitions>
 	<definition name="layouts-blank" template="/WEB-INF/views/layout/layouts-blank.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/board/header.jsp" />
 		<put-attribute name="content" value="" />
 	</definition>
 	
-	<definition name="*.blank" extends="layouts-blank">
+	<definition name="*.tiles" extends="layouts-blank">
 		<put-attribute name="content" value="/WEB-INF/views/{1}.jsp" />
 	</definition>
 	
-	<definition name="/*.blank" extends="layouts-blank">
-		<put-attribute name="content" value="/WEB-INF/views/{1}.jsp" />
+   <!--예시) /WEB-INF/views/board/hyeonsik/hyeonsik.jsp -->
+	<definition name="/*/*/*.tiles-study" extends="layouts-blank">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
 	</definition>
-	<definition name="/*/*/*/*.blank" extends="layouts-blank">
-		<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
+	
+	<definition name="/*/*/*/*.tiles-study" extends="layouts-blank">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
 	</definition>
 </tiles-definitions>

@@ -11,7 +11,6 @@
 <meta charset="UTF-8">
 <title>글목록</title>
 <link rel="stylesheet" type="text/css" href="<%=ctxPath%>/resources/css/bootstrap.min.css">
-
 <link rel="stylesheet" type="text/css" media="screen" href="../resources/css/jquery-ui.min.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="../resources/css/ui.jqgrid.css" />
 
