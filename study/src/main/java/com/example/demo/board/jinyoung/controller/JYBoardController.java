@@ -42,7 +42,7 @@ public class JYBoardController {
 	@RequestMapping("list.action")
 	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
 		
-		mav.setViewName("board/jinyoung/list");
+		mav.setViewName("board/jinyoung/list.tiles-study");
 		
 		return mav;
 		

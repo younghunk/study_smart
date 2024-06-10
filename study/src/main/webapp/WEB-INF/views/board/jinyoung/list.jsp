@@ -439,7 +439,7 @@ function goWriteReply() {
 	  
 </script>
 
-	<div style="display: flex; width: 100%;">
+	<div style="display: flex;">
 		<div style="margin: auto;">
 			<h2 style="margin: 30px 0 30px 0;">글목록</h2>
 			
