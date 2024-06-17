@@ -21,6 +21,6 @@ public class JEBoardDao {
 	// 전체 List 가져오기
 	public List<JEBoardVo> boardList (Map<String, String> boardMap) {
 		List<JEBoardVo> boardList = JEaqlSession.selectList("jueun.getAllList", boardList(boardMap));
-		return boardList;
+		return boardList; 
 	}
 }
