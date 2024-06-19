@@ -35,6 +35,7 @@ public class SMBoardController {
         return mv;
     }
 
+
     @GetMapping("/getSMBoard")
     @ResponseBody
     public ResponseEntity getSMBoard(){
