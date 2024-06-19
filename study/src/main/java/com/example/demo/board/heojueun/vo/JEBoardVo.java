@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 public class JEBoardVo {
 	
