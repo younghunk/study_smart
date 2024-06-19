@@ -1,11 +1,11 @@
-<!-- header page©║╪╜ tiles ╪Ёа╓ -->
+<!-- header pageО©╫О©╫О©╫О©╫ tiles О©╫О©╫О©╫О©╫ -->
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <!DOCTYPE html>
 <html>
 <head>
     <style>
-        /* ╦ч╢╨ ╫╨е╦юо */
+        /* О©╫ч╢О©╫ О©╫О©╫е╦О©╫О©╫ */
         nav {
             padding: 20px;
             font-size: 18px; 
@@ -37,6 +37,7 @@
         <nav>
             <div><a href="/">цжгЖ╫д ажюс</a></div>
             <div><a href="/jinyoung/list.action">╠ХаЬ©╣ ажюс</a></div>
+			<div><a href="/heojueun/list">гЦажю╨ ажюс</a></div>
         </nav>
     </div>
 </body>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- mapper 기본설정 -->
+<!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="heojueun">
+
+<resultMap type="com.example.demo.board.heojueun.vo.JEBoardVo" id="jeBoardVo">
+	<id column="seq" property="seq"/>
+	<result column="userid" property="userid"/>
+	<result column="subject" property="subject"/>
+	<result column="content" property="content"/>
+	<result column="readCount" property="readCount"/>
+	<result column="regDate" property="regDate"/>
+	<result column="status" property="status"/>
+	<result column="commentCount" property="commentCount"/>
+	<result column="date" property="date"/>
+	<result column="groupno" property="groupno"/>
+	<result column="fk_seq" property="fk_seq"/>
+	<result column="depthno" property="depthno"/>
+</resultMap>
+
+    <select id="boardList" resultMap="jeBoardVo">
+        SELECT 
+        	* FROM Board.tbl_board
+    </select>
+</mapper>
