@@ -7,6 +7,8 @@
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -26,75 +28,104 @@
     <script src="../resources/js/i18n/grid.locale-kr.js" type="text/javascript"></script>
     <script src="../resources/js/jquery.jqGrid.min.js" type="text/javascript"></script>
 </head>
+<style>
+    button {
+        cursor: pointer;
+    }
+</style>
 <body>
-    <script>
+    <script type="text/javascript">
+        let id = 0;
+        let row = 0;
         $(document).ready(function() {
+            fn_initGrid("grid");
+            $('#grid').jqGrid('hideCol', 'cb');
 
-            // 그리드 생성
-            function createGrid(){
-                $("#list").jqGrid({
-                    datatype: "local",
-                    data: mydata,
-                    colNames:['글번호', '아이디', '제목','본문','조회수','작성일','삭제유무','댓글수','날짜','그룹번호'],
-                    colModel:[
-                        {name:'seq', index:'seq', width:20, align: "center"},
-                        {name:'userid', index:'userid', width:50 , align: "center" },
-                        {name:'subject', index:'subject', width:100, align: "center" ,sortable:false },
-                        {name:'content', index:'content', align: "left"},
-                        {name:'readCount', index:'readCount', width:30, align: "center"},
-                        {name:'regDate', index:'regDate', width:80, align: "center"},
-                        {name:'status', index:'status', width:40, align: "center"},
-                        {name:'commentCount', index:'commentCount', width:30, align: "center"},
-                        {name:'date', index:'date', width:50, align: "center"},
-                        {name:'groupno', index:'groupno', width:30, align: "center"}
-                    ],
-                    autowidth: true,
-                    //rownumbers : true,
-                    pager:'#pager',
-                    rowNum: 10,
-                    //rowList: [10, 20, 50],
-                    sortname: 'regDate',
-                    sortorder: 'asc',
-                    height: 250,
-                });
-            }
-
-            var mydata = new Array();
-
-            // 게시판 데이터 받아오기
-            function getSMBoard (){
-                $.ajax({
-                    url: "/getSMBoard",
-                    type: "GET",
-                    datatype: "json",
-                    success: function (response){
-                         for(let i = 0; i<response.length; i++){
-                             mydata.push({seq:response[i].seq, userid:response[i].userid, subject:response[i].subject, content:response[i].content, readCount:response[i].readCount, regDate:response[i].regDate, status:response[i].status, commentCount:response[i].commentCount, date:response[i].date, groupno:response[i].groupno})
-                         }
-                        createGrid();
-                    },
-                    error: function (error){
-                        alert("게시판을 불러오는데 실패하였습니다.")
-                    }
-                })
-            }
-
-            getSMBoard();
-
-            $(window).on('resize.jqGrid', function() {
-                $("#list").jqGrid('setGridWidth', $("#list").parent().parent().parent().parent().parent().width());
-            })
-            $(".jarviswidget-fullscreen-btn").click(function(){
-                setTimeout(function() {
-                    $("#list").jqGrid('setGridWidth', $("#list").parent().parent().parent().parent().parent().width());
-                }, 100);
+            $("button#edit").click(function () {
+                id = $("#grid").getGridParam('selarrrow');
+                if (id == "") {
+                    alert("수정할 게시글을 선택해주세요.");
+                    return;
+                } else {
+                    $('button.editBtn').removeClass("d-none");
+                    row = $("#grid").jqGrid('getRowData', id);
+                    $("#grid").editRow(id);
+                }
             });
+
+            $("button#save").click(function () {
+                $("#grid").jqGrid('saveRow', id, true);
+                row = $("#grid").getRowData(id);
+                $.ajax({
+                    url: "/chosumin/edit.action",
+                    type: "POST",
+                    datatype: "json",
+                    data: {"seq": row.seq, "userid": row.userid, "subject": row.subject, "content": row.content},
+                    success: function (response) {
+                        alert(response);
+                    }, error: function () {
+                        alert(response);
+                    }
+                });
+                $("#grid").trigger("reloadGrid");
+                $('button.editBtn').addClass("d-none");
+            });
+
+            $("button#reply").click(function () {
+                id = $("#grid").getGridParam('selarrrow');
+                row = $("#grid").getRowData(id);
+                if (id == "") {
+                    alert("답글을 작성할 게시글을 선택해주세요.");
+                    return;
+                } else {
+                    location.href = '/chosumin/SMReply?seq='+row.seq;
+                }
+            });
+
         });
+
+        function fn_initGrid(grid_id) {
+            $('#' + grid_id).jqGrid({
+                url: '/chosumin/getSMBoard',
+                datatype: "json",
+                type: "GET",
+                colNames: ['글번호', '제목', '내용', '캘린더', '작성자', '작성일', 'groupno','depthno'],
+                colModel: [
+                    { name: 'seq', index: 'seq', align: 'center', width: '5%', sortable: false },
+                    { name: 'subject', index: 'subject', align: 'left', width: '15%', sortable: false, editable: true, required: true },
+                    { name: 'content', index: 'content', align: 'left', width: '40%', sortable: false, editable: true, required: true },
+                    { name: 'date', index: 'date', align: 'center', width: '15%', sortable: false },
+                    { name: 'userid', index: 'dauseride', align: 'center', width: '10%', sortable: false },
+                    { name: 'regDate', index: 'regDate', align: 'center', width: '15%', sortable: false },
+                    { name: 'groupno', index: 'groupno', align: 'center', width: '15%', sortable: false },
+                    { name: 'depthno', index: 'depthno', align: 'center', width: '15%', sortable: false }
+                ],
+                 loadonce : true,
+                 height: 450,
+                 width: 1100,
+                 multiselect: true,
+                 loadtext : '로딩중..',
+                 rowNum: 20,
+                 pager: '#pager',
+                 multiboxonly : true
+            });
+        }
     </script>
-    <div>
-        <div class="tableWrap">
-            <table id="list"></table>
+
+    <div class="d-flex">
+        <div class="m-auto">
+            <h2>글목록</h2>
+            <div class="d-flex justify-content-end mb-3">
+                <button type="button" class="mr-2 btn-sm btn-dark" onclick = "location.href = '/chosumin/SMWrite'">글쓰기</button>
+                <button type="button" class="mr-2 btn-sm btn-dark" id="edit">수정하기</button>
+                <button type="button" class="btn-sm btn-dark" id="reply">답글달기</button>
+            </div>
+            <table style="width: 1200px;" id="grid"></table>
             <div id="pager"></div>
+            <div class="d-flex justify-content-end mt-3">
+                <button type="button" class="mr-2 btn-sm btn-dark editBtn d-none" id="save">저장</button>
+                <button type="button" class="btn-sm btn-dark editBtn d-none" onclick = "location.href = '/chosumin/SMBoard'">취소</button>
+            </div>
         </div>
     </div>
 </body>

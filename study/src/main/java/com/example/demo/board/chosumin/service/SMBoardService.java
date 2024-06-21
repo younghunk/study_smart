@@ -1,7 +1,7 @@
 package com.example.demo.board.chosumin.service;
 
 import com.example.demo.board.chosumin.dao.SMBoardDAO;
-import com.example.demo.board.chosumin.dto.SMBoardDTO;
+import com.example.demo.board.chosumin.vo.SMBoardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,17 @@ public class SMBoardService {
     @Autowired
     SMBoardDAO smBoardDAO;
 
-    public List<SMBoardDTO> getBoardList(){
+    public List<SMBoardVO> getBoardList(){
         return smBoardDAO.getBoardList();
     }
+
+    public int addBoard(SMBoardVO board){ return smBoardDAO.addBoard(board);}
+
+    public SMBoardVO getBoard(int seq){
+        return smBoardDAO.getBoard(seq);
+    }
+
+    public int editBoard(SMBoardVO board){return smBoardDAO.editBoard(board);}
+
+    public int addReply(SMBoardVO board){return smBoardDAO.addReply(board);}
 }

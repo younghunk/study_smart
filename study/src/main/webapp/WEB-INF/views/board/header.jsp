@@ -38,6 +38,7 @@
             <div><a href="/">최현식 주임</a></div>
             <div><a href="/jinyoung/list.action">김진영 주임</a></div>
 			<div><a href="/heojueun/list">허주은 주임</a></div>
+            <div><a href="/chosumin/SMBoard">조수민 주임</a></div>
         </nav>
     </div>
 </body>

@@ -1,4 +1,4 @@
-package com.example.demo.board.chosumin.dto;
+package com.example.demo.board.chosumin.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SMBoardDTO {
+public class SMBoardVO {
 
     private int seq;
     private String userid;
