@@ -20,7 +20,7 @@
   $(document).ready(function(){
 	  
 	  // 글쓰기 버튼
-	  $("button#btnWrite").click(function(){
+	  $("#btnWrite").click(function(){
 		  
 		  // 글제목 유효성 검사 
 		  const subject = $("input:text[name='subject']").val().trim();
@@ -40,7 +40,7 @@
 		  // 폼(form)을 전송(submit)
 		  const frm = document.addFrm;
 		  frm.method = "post";
-		  frm.action = "<%= ctxPath%>/newPost.do";
+		  frm.action = "<%= ctxPath%>/heojueun/newPost.do";
 		  frm.submit();
 	  });
 	  
@@ -53,7 +53,7 @@
 		  
 	  });
 	  
-  });// end of $(document).ready(function(){})-----------
+  });
 
 </script>
 
@@ -77,14 +77,14 @@
 			<tr>
 				<th style="width: 15%;">내용</th> 
 				<td>
-				    <textarea style="width: 100%; height: 200px;" name="content" id="content"></textarea>
+				    <textarea style="width: 700px; height: 200px;" name="content" id="content"></textarea>
 				</td>
 			</tr>
 			
         </table>
         
-        <div style="margin: 20px;">
-            <button type="button" id="btnWrite">글쓰기</button>
+        <div style="margin-right: 160px; margin-top: 20px; float: right;">
+            <button id="btnWrite">글쓰기</button>
             <button type="button" id="btnCancle">취소</button>  
         </div>
         

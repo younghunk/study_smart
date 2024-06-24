@@ -19,9 +19,34 @@
 	<result column="fk_seq" property="fk_seq"/>
 	<result column="depthno" property="depthno"/>
 </resultMap>
-
+<parameterMap type="com.example.demo.board.heojueun.vo.JEBoardVo" id="paramJeBoardVo"/>
+	<!-- 전체 게시글 조회 -->
     <select id="boardList" resultMap="jeBoardVo">
-        SELECT 
-        	* FROM Board.tbl_board
+        SELECT seq, userid, subject, content, readCount, regDate, status, date, commentCount, groupno, fk_seq, depthno
+        	FROM Board.tbl_board
     </select>
+    
+    <!-- 글쓰기 -->
+    <insert id="boardInsert" parameterMap="paramJeBoardVo">
+    	INSERT INTO Board.tbl_board ( subject, content, date, groupno )
+		VALUES(#{subject},#{content},#{date}, #{groupno})
+    </insert>
+    
+    <!-- 게시글 수정하기 -->
+    <update id="boardUpdate" parameterMap="paramJeBoardVo">
+    	UPDATE Board.tbl_board SET subject = #{subject}, content = #{content}, date = #{date}
+		WHERE seq = #{seq}
+    </update>
+    
+    <!-- 답글쓰기 -->
+    <insert id="newComment" parameterMap="paramJeBoardVo">
+		insert into tbl_board(subject, content, groupno, fk_seq, depthno)
+		values(#{subject}, #{content}, #{groupno}, #{fk_seq}, #{depthno}+1) 
+	</insert>
+	
+	<!-- 테이블에서 groupno 컬럼의 최대값 알아오기 -->
+	<select id="getGroupnoMax" resultType="int">
+		SELECT nvl(max(groupno), 0)
+		    FROM Board.tbl_board
+	</select>
 </mapper>

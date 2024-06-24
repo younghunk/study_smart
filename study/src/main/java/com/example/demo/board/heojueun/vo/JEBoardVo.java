@@ -1,14 +1,9 @@
 package com.example.demo.board.heojueun.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 public class JEBoardVo {
 	
-	private int seq; // 글번호
+	private Integer seq; // 글번호
 	private String userid; // 사용자ID
 	private String subject; // 제목
 	private String content; // 글내용
