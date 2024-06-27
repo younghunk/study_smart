@@ -1,21 +1,15 @@
 package com.example.demo.board.chosumin.controller;
-
-import com.example.demo.board.chosumin.dao.SMBoardDAO;
 import com.example.demo.board.chosumin.vo.SMBoardVO;
 import com.example.demo.board.chosumin.service.SMBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
-import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/chosumin")
 public class SMBoardController {
-
-    Logger logger = Logger.getLogger(SMBoardDAO.class.getName());
 
     @Autowired
     SMBoardService smBoardService;
@@ -23,6 +17,8 @@ public class SMBoardController {
     //게시판 페이지
     @RequestMapping("/SMBoard")
     public ModelAndView selectSMBoardList(ModelAndView mv) throws Exception{
+        int seq = smBoardService.selectSeq();
+        mv.addObject("seq",seq);
          mv.setViewName("/board/chosumin/chosumin_list.tiles-study");
         return mv;
     }
@@ -31,23 +27,25 @@ public class SMBoardController {
     @GetMapping("/getSMBoard")
     @ResponseBody
     public List<SMBoardVO> getSMBoard(){
-        List<SMBoardVO> boardList = smBoardService.getBoardList();
+        List<SMBoardVO> boardList = smBoardService.selectBoardAll();
         return boardList;
     }
 
     //글작성 페이지
     @RequestMapping("/SMWrite")
-    public ModelAndView create(ModelAndView mv) throws Exception{
+    public ModelAndView SMWrite(ModelAndView mv) throws Exception{
         mv.setViewName("/board/chosumin/chosumin_write");
         return mv;
     }
 
     //글작성
-    @PostMapping("/write.action")
+    @PostMapping("/insertBoard")
     @ResponseBody
-    public ModelAndView write(SMBoardVO boardvo, ModelAndView mv){
-        int result = smBoardService.addBoard(boardvo);
-        mv.setViewName("redirect:/chosumin/SMBoard");
+    public ModelAndView insertBoard(SMBoardVO boardvo, ModelAndView mv){
+        if(boardvo.getDate() == null){
+            boardvo.setDate(null);
+        }
+        int result = smBoardService.insertBoard(boardvo);
         if(result == 1){
             mv.addObject("result","등록되었습니다.");
         }else{
@@ -57,10 +55,11 @@ public class SMBoardController {
     }
 
     //글수정
-    @PostMapping("/edit.action")
+    @PostMapping("/updateBoard")
     @ResponseBody
-    public String edit(SMBoardVO boardvo, ModelAndView mv){
-        int result = smBoardService.editBoard(boardvo);
+    public String updateBoard(SMBoardVO boardvo, ModelAndView mv){
+        boardvo.setSubject(boardvo.getSubject());
+        int result = smBoardService.updateBoard(boardvo);
         if (result == 1) {
             return "수정되었습니다.";
         }
@@ -69,22 +68,35 @@ public class SMBoardController {
         }
     }
 
+    //글삭제
+    @PostMapping("/deleteBoard")
+    @ResponseBody
+    public String deleteBoard(int seq){
+        int result = smBoardService.deleteBoard(seq);
+        if (result == 1) {
+            return "삭제되었습니다.";
+        }
+        else {
+            return "처리 중 문제가 발생했습니다.";
+        }
+    }
+
     //답글작성 페이지
-    @GetMapping("/SMReply")
-    public ModelAndView reply(ModelAndView mv,@RequestParam("seq") int seq) throws Exception{
-        SMBoardVO boardVO = smBoardService.getBoard(seq);
+    @GetMapping("/replyBoard")
+    public ModelAndView replyBoard(ModelAndView mv,@RequestParam("seq") int seq) throws Exception{
+        SMBoardVO boardVO = smBoardService.selectBoard(seq);
         boardVO.setDepthno(boardVO.getDepthno()+1);
-        boardVO.setFk_seq(boardVO.getSeq());
+        boardVO.setFk_seq(boardVO.getGroupno());
         mv.addObject("boardVO",boardVO);
         mv.setViewName("/board/chosumin/chosumin_reply");
         return mv;
     }
 
     //답글작성
-    @PostMapping("/reply.action")
+    @PostMapping("/insertReply")
     @ResponseBody
-    public ModelAndView reply(SMBoardVO boardvo, ModelAndView mv){
-        int result = smBoardService.addReply(boardvo);
+    public ModelAndView insertReply(SMBoardVO boardvo, ModelAndView mv){
+        int result = smBoardService.insertReply(boardvo);
         mv.setViewName("redirect:/chosumin/SMBoard");
         if(result == 1){
             mv.addObject("result","등록되었습니다.");

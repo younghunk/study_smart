@@ -3,38 +3,133 @@
 <!DOCTYPE  mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Sumin">
-    <select id="boardSelectAll" resultType="com.example.demo.board.chosumin.vo.SMBoardVO">
-        SELECT * FROM Board.tbl_board
-        ORDER BY groupno, depthno asc
+    <select id="selectBoardAll" resultType="com.example.demo.board.chosumin.vo.SMBoardVO">
+        SELECT
+            seq,
+            userid,
+            subject,
+            content,
+            readCount,
+            regDate,
+            status,
+            date,
+            commentCount,
+            groupno,
+            fk_seq,
+            depthno
+        FROM
+            Board.tbl_board
+        WHERE
+            status = 1
+        ORDER BY
+            groupno desc,
+            depthno asc
     </select>
 
-    <insert id="boardInsert" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
+    <insert id="insertBoard" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
         <selectKey resultType="int" keyProperty="groupno" order="BEFORE">
-            SELECT AUTO_INCREMENT
-            from information_schema.tables
-            WHERE table_name = 'tbl_board'
-            AND table_schema=DATABASE();
+            SELECT
+                AUTO_INCREMENT
+            from
+                information_schema.tables
+            WHERE
+                table_name = 'tbl_board'
+            AND
+                table_schema=DATABASE();
         </selectKey>
-        INSERT INTO Board.tbl_board (userid, subject, content, date, groupno)
-        VALUES (#{userid}, #{subject}, #{content}, #{date}, #{groupno})
+        INSERT INTO
+            Board.tbl_board
+                (
+                 userid,
+                 subject,
+                 content,
+                 <if test="date != ''">
+                     date,
+                 </if>
+                 groupno
+                )
+        VALUES
+            (
+             #{userid},
+             #{subject},
+             #{content},
+            <if test="date != ''">
+             #{date},
+            </if>
+             #{groupno}
+            )
     </insert>
 
-    <select id="boardSelect" parameterType="int" resultType="com.example.demo.board.chosumin.vo.SMBoardVO">
-        SELECT * FROM Board.tbl_board
-        WHERE seq = #{seq}
+    <select id="selectBoard" parameterType="int" resultType="com.example.demo.board.chosumin.vo.SMBoardVO">
+        SELECT
+            seq,
+            userid,
+            subject,
+            content,
+            readCount,
+            regDate,
+            status,
+            date,
+            commentCount,
+            groupno,
+            fk_seq,
+            depthno
+        FROM
+            Board.tbl_board
+        WHERE
+            seq = #{seq}
     </select>
 
-    <update id="boardUpdate" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
+    <update id="updateBoard" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
         UPDATE Board.tbl_board
         SET
             subject = #{subject},
+        <if test="date == ''">
+            date = null,
+        </if>
+        <if test="date != ''">
+            date = #{date},
+        </if>
             content = #{content}
         WHERE
             seq = #{seq}
     </update>
 
-    <insert id="replyInsert" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
-        INSERT INTO Board.tbl_board (userid, subject, content, date, groupno, fk_seq, depthno)
-        VALUES (#{userid}, #{subject}, #{content}, #{date}, #{groupno}, #{fk_seq}, #{depthno})
+    <insert id="insertReply" parameterType="com.example.demo.board.chosumin.vo.SMBoardVO">
+        INSERT INTO Board.tbl_board
+            (
+                userid,
+                subject,
+                content,
+                date,
+                groupno,
+                fk_seq,
+                depthno
+            )
+        VALUES
+            (
+                #{userid},
+                #{subject},
+                #{content},
+                #{date},
+                #{groupno},
+                #{fk_seq},
+                #{depthno}
+            )
     </insert>
+
+    <update id="deleteBoard" parameterType="int">
+        UPDATE Board.tbl_board
+        SET
+        status = 0
+        WHERE
+        seq = #{seq}
+    </update>
+
+    <select id="selectSeq" parameterType="int" resultType="int">
+        SELECT
+            MAX(seq)
+        FROM
+            Board.tbl_board
+    </select>
 </mapper>

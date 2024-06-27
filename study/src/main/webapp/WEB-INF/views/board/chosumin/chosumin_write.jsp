@@ -36,7 +36,7 @@
                 }
                 const form = document.write;
                 form.method = "post";
-                form.action = "/chosumin/write.action";
+                form.action = "/chosumin/insertBoard";
                 form.submit();
             });
         })

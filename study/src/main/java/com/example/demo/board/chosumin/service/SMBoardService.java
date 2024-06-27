@@ -1,32 +1,41 @@
 package com.example.demo.board.chosumin.service;
-
 import com.example.demo.board.chosumin.dao.SMBoardDAO;
 import com.example.demo.board.chosumin.vo.SMBoardVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class SMBoardService {
 
-    Logger logger = Logger.getLogger(SMBoardDAO.class.getName());
-
     @Autowired
     SMBoardDAO smBoardDAO;
 
-    public List<SMBoardVO> getBoardList(){
-        return smBoardDAO.getBoardList();
+    public List<SMBoardVO> selectBoardAll(){
+        return smBoardDAO.selectBoardAll();
     }
 
-    public int addBoard(SMBoardVO board){ return smBoardDAO.addBoard(board);}
-
-    public SMBoardVO getBoard(int seq){
-        return smBoardDAO.getBoard(seq);
+    public int insertBoard(SMBoardVO board){
+        return smBoardDAO.insertBoard(board);
     }
 
-    public int editBoard(SMBoardVO board){return smBoardDAO.editBoard(board);}
+    public SMBoardVO selectBoard(int seq){
+        return smBoardDAO.selectBoard(seq);
+    }
 
-    public int addReply(SMBoardVO board){return smBoardDAO.addReply(board);}
+    public int updateBoard(SMBoardVO board){
+        return smBoardDAO.updateBoard(board);
+    }
+
+    public int insertReply(SMBoardVO board){
+        return smBoardDAO.insertReply(board);
+    }
+
+    public int selectSeq(){
+        return smBoardDAO.selectSeq();
+    }
+
+    public int deleteBoard(int seq){
+        return smBoardDAO.deleteBoard(seq);
+    }
 }

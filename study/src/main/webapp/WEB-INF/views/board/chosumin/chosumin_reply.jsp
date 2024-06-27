@@ -38,7 +38,7 @@
                 }
                 const form = document.reply;
                 form.method = "post";
-                form.action = "/chosumin/reply.action";
+                form.action = "/chosumin/insertReply";
                 form.submit();
             });
         })

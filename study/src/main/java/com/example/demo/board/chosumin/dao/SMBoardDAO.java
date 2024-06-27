@@ -5,46 +5,54 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.logging.Logger;
 
 @Repository
 public class SMBoardDAO {
-
-    Logger logger = Logger.getLogger(SMBoardDAO.class.getName());
 
     @Autowired
     @Qualifier("orgSqlSession")
     private SqlSession SMsqlsession;
 
     // 전체 게시글 조회
-    public List<SMBoardVO> getBoardList(){
-        List<SMBoardVO> boardList = SMsqlsession.selectList("Sumin.boardSelectAll");
+    public List<SMBoardVO> selectBoardAll(){
+        List<SMBoardVO> boardList = SMsqlsession.selectList("Sumin.selectBoardAll");
         return boardList;
     }
 
     // 게시글 작성
-    public int addBoard(SMBoardVO boardvo){
-        int result = SMsqlsession.insert("Sumin.boardInsert", boardvo);
+    public int insertBoard(SMBoardVO boardvo){
+        int result = SMsqlsession.insert("Sumin.insertBoard", boardvo);
         return result;
     }
 
-    // 전체 게시글 조회
-    public SMBoardVO getBoard(int seq){
-        SMBoardVO boardList = SMsqlsession.selectOne("Sumin.boardSelect", seq);
+    // 게시글 조회
+    public SMBoardVO selectBoard(int seq){
+        SMBoardVO boardList = SMsqlsession.selectOne("Sumin.selectBoard", seq);
         return boardList;
     }
 
     // 게시글 수정
-    public int editBoard(SMBoardVO boardvo){
-        int result = SMsqlsession.update("Sumin.boardUpdate", boardvo);
+    public int updateBoard(SMBoardVO boardvo){
+        int result = SMsqlsession.update("Sumin.updateBoard", boardvo);
         return result;
     }
 
     // 답변 작성
-    public int addReply(SMBoardVO boardvo){
-        int result = SMsqlsession.insert("Sumin.replyInsert", boardvo);
+    public int insertReply(SMBoardVO boardvo){
+        int result = SMsqlsession.insert("Sumin.insertReply", boardvo);
+        return result;
+    }
+
+    // seq 조회
+    public int selectSeq(){
+        int seq = SMsqlsession.selectOne("Sumin.selectSeq");
+        return seq;
+    }
+
+    // 게시글 삭제
+    public int deleteBoard(int seq){
+        int result = SMsqlsession.update("Sumin.deleteBoard", seq);
         return result;
     }
 }
