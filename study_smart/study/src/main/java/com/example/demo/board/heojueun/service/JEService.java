@@ -38,59 +38,32 @@ public class JEService {
 	// 새글쓰기
 	public int newPost(Map<String, Object> map) {
 		try {
-			return jeBoardDao.insertPost(map);
+			return jeBoardDao.newPost(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return 0;
 	}
 	
-	// 게시글 수정
+	// 업데이트
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int updatePost(List<JEBoardVo> list) throws Exception {
 		int count = 0;
 		for(JEBoardVo jeBoardVo : list) {
 			if(jeBoardVo.getDate() == null || jeBoardVo.getDate().equals("")) 
 			    jeBoardVo.setDate(null);
-			
-			if (jeBoardVo.getSeq() != null && jeBoardVo.getSeq() > 0) {
-				count += jeBoardDao.updatePost(jeBoardVo);
-			} else {
-				count += jeBoardDao.gridInsertPost(jeBoardVo);
-			}
+
+			/* 
+			 if(seq != null)
+			 	update
+			 else
+			 	insert
+			 */
 			//int return 타입을 사용해서 업데이트가 완료됐을 때 카운트가 증가되야 하기 때문에 넣어줌
 			count += jeBoardDao.updatePost(jeBoardVo);
 		}
 		return count;
     }
-	
-	// 답글쓰기
-	public int newComment(JEBoardVo jeBoardVo) {
-		try {
-			return jeBoardDao.insertComment(jeBoardVo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-	
-	// 게시물 삭제
-	public int deletePost(List<JEBoardVo> list) throws Exception {
-        int count = 0;
-        for (JEBoardVo jeBoardVo : list) {
-        	System.out.println("Deleting: " + jeBoardVo.getContent());
-            count += jeBoardDao.deleteBoard(jeBoardVo);
-        }
-        return count;
-    }
-	
-	// 테이블에서 groupno 컬럼의 최대값 알아오기
-	public int getGroupnoMax() {
-		
-		int maxgrouno = jeBoardDao.getGroupnoMax();
-		
-		return maxgrouno;
-	}
 }
 
 

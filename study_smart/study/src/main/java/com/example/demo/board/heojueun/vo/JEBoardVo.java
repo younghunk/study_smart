@@ -18,7 +18,7 @@ public class JEBoardVo {
 	
 	public JEBoardVo(){}
 
-	public Integer getSeq() {
+	public int getSeq() {
 		return seq;
 	}
 

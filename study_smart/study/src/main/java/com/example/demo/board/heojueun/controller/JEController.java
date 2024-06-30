@@ -58,14 +58,11 @@ public class JEController {
 		String content = request.getParameter("content");
 		String date = request.getParameter("date") == "" ? null : request.getParameter("date");
 		
-		int groupno = jeService.getGroupnoMax()+1;
-		
 		HashMap<String, Object> map = new HashMap<>();
 		
 		map.put("subject", subject);
 		map.put("content", content);
 		map.put("date", date);
-		map.put("groupno", groupno);
 		
 		try {
 			jeService.newPost(map);
@@ -87,7 +84,6 @@ public class JEController {
 	// 게시판 수정하기
 	@PostMapping("/updatePost.do")
 	public ResponseEntity<Object> updatePost(@RequestBody List<JEBoardVo> list) {
-		System.out.println("list :" + list.toString());
 		try {
 			if (jeService.updatePost(list) > 0)
 				return new ResponseEntity<Object>(200, HttpStatus.OK);
@@ -99,60 +95,5 @@ public class JEController {
 			return new ResponseEntity<Object>(500, HttpStatus.OK);
 		}
 	}
-	
-	// 답글쓰기
-	@PostMapping("/newComment.do")
-	public ResponseEntity<Object> newComent(@RequestBody JEBoardVo jeBoardVo) {
-		try {
-			if (jeService.newComment(jeBoardVo) > 0) {
-				return new ResponseEntity<Object>(200, HttpStatus.OK);
-			}else {
-				return new ResponseEntity<Object>(500, HttpStatus.OK);
-			}
-		} catch (Exception e) {
-			logger.debug(e.toString());
-			return new ResponseEntity<Object>(500, HttpStatus.OK);
-		}
-	}
-	
-	// 답글쓰기 페이지 이동
-	@GetMapping("/newCommentPage.do")
-	public ModelAndView newComentPage(ModelAndView mav, HttpServletRequest request) {
-	    String subject = "답변_" + request.getParameter("subject");
-	    String groupno = request.getParameter("groupno");
-	    String fk_seq = request.getParameter("fk_seq");
-	    String depthno = request.getParameter("depthno");
-
-	    mav.addObject("subject", subject);
-	    mav.addObject("groupno", groupno);
-	    mav.addObject("fk_seq", fk_seq);
-	    mav.addObject("depthno", depthno);
-	    
-	    mav.setViewName("board/heojueun/je_reply");
-	    
-	    return mav;
-	}
-
-	// 게시글 삭제
-	@PostMapping("/deletePost.do")
-	public ResponseEntity<Object> deletePost(@RequestBody List<JEBoardVo> jeBoardVo) {
-	    try {
-	    	for (JEBoardVo vo : jeBoardVo) {
-                System.out.println("Received Data: " + vo.getContent());
-            }
-	        int result = jeService.deletePost(jeBoardVo);
-	        if (result > 0) {
-	        	System.out.println("Delete Result: " + result);
-	            return new ResponseEntity<>(HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>("No posts deleted", HttpStatus.INTERNAL_SERVER_ERROR);
-	        }
-	    } catch (Exception e) {
-	        logger.error("Error deleting post", e);
-	        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
-	}
-
-	
 	
 }
