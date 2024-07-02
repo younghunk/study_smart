@@ -18,6 +18,7 @@ public class SMBoardVO {
     private int status;
     private int commentCount;
     private String date;
+    private String selectType;
 
     private int groupno;
     private int fk_seq;

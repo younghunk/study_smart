@@ -17,8 +17,6 @@ public class SMBoardController {
     //게시판 페이지
     @RequestMapping("/SMBoard")
     public ModelAndView selectSMBoardList(ModelAndView mv) throws Exception{
-        int seq = smBoardService.selectSeq();
-        mv.addObject("seq",seq);
          mv.setViewName("/board/chosumin/chosumin_list.tiles-study");
         return mv;
     }
@@ -36,6 +34,14 @@ public class SMBoardController {
     public ModelAndView SMWrite(ModelAndView mv) throws Exception{
         mv.setViewName("/board/chosumin/chosumin_write");
         return mv;
+    }
+
+    //글작성 + 글수정 + 글삭제 동시적용
+    @PostMapping("/updateBoardList")
+    @ResponseBody
+    public String updateBoardList(@RequestBody List<SMBoardVO> boardvo){
+        String result = smBoardService.updateBoardList(boardvo);
+        return result;
     }
 
     //글작성

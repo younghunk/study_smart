@@ -1,14 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: tnals
-  Date: 24. 6. 18.
-  Time: 오후 4:16
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -25,6 +16,9 @@
     <!-- jqGrid -->
     <script src="../resources/js/i18n/grid.locale-kr.js" type="text/javascript"></script>
     <script src="../resources/js/jquery.jqGrid.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" type="text/css" href="../resources/dhtmlx/dhtmlx.css"/>
+    <script src="../resources/dhtmlx/dhtmlx.js" type="text/javascript"></script>
 </head>
 <style>
     button {
@@ -48,10 +42,9 @@
         let row = 0;
         let idval = 0;
 
-        //달력 새로고침
-        function refresh(prefix) {
-            idval = prefix + '_date';
-            $('#' + idval).val('');
+        //달력에서 버튼 클릭시 날짜 input값 지워짐
+        function fn_clearDate(rowId) {
+            $('input[id='+rowId+']').val('');
         }
 
         //그리드 그리기
@@ -65,12 +58,18 @@
                     { name: 'seq', index: 'seq', align: 'center', width: '5%', sortable: false},
                     { name: 'subject', index: 'subject', align: 'left', width: '15%', sortable: false, editable: true, required: true, classes: 'jqgrid-ellipsis' },
                     { name: 'content', index: 'content', align: 'left', width: '40%', sortable: false, editable: true, required: true, classes: 'jqgrid-ellipsis'},
-                    { name: 'date', index: 'date', align: 'center', width: '20%', sortable: false, editable: true,showOn:'button', buttonText: 'calendar',
-                        editoptions : { dataInit : function(e){
-                                $(e).datepicker({ dateFormat: 'yy-mm-dd', constrainInput: false, showOn:'button', buttonText: '달력',showButtonPanel: true, showtoday:false, closeText: "닫기"});
-                                idval = $(e).attr('id');
-                                var prefix = idval.split('_')[0];
-                                $(e).after("<button class='refresh' onclick=\"refresh('" + prefix + "')\">새로고침</button>");
+                    { name: 'date', index: 'date', align: 'center', width: '20%', sortable: false, editable: true,
+                        edittype: 'custom',
+                        editoptions: {
+                            custom_element:Calendar,
+                            custom_value: setVal,
+                            dataInit: function(e) {
+                                var id = $(e).find("input").attr("id");
+                                $(e).find("img").attr("id", id + '_img');
+                                $(e).find("img").attr("name", id + '_img');
+                                $(e).find("button").attr("id", id + '_btn');
+                                $(e).find("button").attr("name", id + '_btn');
+                                initCal(id, id + '_img');
                             }
                         }
                     },
@@ -96,6 +95,29 @@
                     return (cm[i].name === 'cb');
                 }
             });
+        }
+
+        var calendar;
+        function initCal(inputId, btnId) {
+            calendar = new dhtmlXCalendarObject({input: inputId, button: btnId});
+            calendar.setDate(new Date());
+            calendar.setDateFormat("%Y-%m-%d");
+        }
+
+        // 달력 커스텀 사용
+        function Calendar(value, options) {
+            var rowId = options.id;
+            var str = "";
+            str += '<input type="text" readonly style="width= 40px;" value="' + value + '"/>';
+            str += '<img class="btnCalendar" src="/resources/images/calendar.png"/>';
+            str += '<button type="button" onclick="fn_clearDate(\'' + rowId + '\');">새로고침</button>';
+            return str;
+        }
+
+        function setVal(elem, operation, value) {
+            if (operation === 'get') {
+                return $(elem).val();
+            }
         }
 
         $(document).ready(function() {
@@ -151,56 +173,28 @@
 
             //저장 => 추가/수정/삭제 한번에 (selectType으로 구분)
             $("#save").click(function () {
-                var reload = 0;
+                var rowDataList = [];
                 var id = $("#grid").getGridParam('selarrrow');
                 for(var i =0; i<id.length; i++){
                     $("#grid").jqGrid('saveRow', id[i], true);
                     row = $("#grid").getRowData(id[i]);
+                    rowDataList.push(row);
+                    $('#grid').jqGrid('setCell', id[i], 'selectType', null);
+                }
 
-                if(row.selectType == 'edit'){
-                        $.ajax({
-                            url: "/chosumin/updateBoard",
-                            type: "POST",
-                            datatype: "json",
-                            data: {"seq": row.seq, "subject": row.subject, "content": row.content, "date": row.date},
-                            success: function (response) {
-                            }, error: function () {
-                                alert(response);
-                            }
-                        });
-                        $('#grid').jqGrid('setCell', id[i], 'selectType', null);
-                    }else if(row.selectType == 'write'){
-                        reload = 1;
-                        $.ajax({
-                            url: "/chosumin/insertBoard",
-                            type: "POST",
-                            datatype: "json",
-                            data: {"subject": row.subject, "content": row.content, "date": row.date},
-                            success: function (response) {
-                            }, error: function () {
-                                alert(response);
-                            }
-                        });
-                        $('#grid').jqGrid('setCell', id[i], 'selectType', null);
-                    }else if(row.selectType == 'delete'){
-                        reload = 1;
-                        $.ajax({
-                            url: "/chosumin/deleteBoard",
-                            type: "POST",
-                            datatype: "json",
-                            data: {"seq": row.seq},
-                            success: function (response) {
-                            }, error: function () {
-                                alert(response);
-                            }
-                        });
+                $.ajax({
+                    url: "/chosumin/updateBoardList",
+                    type: "POST",
+                    contentType: 'application/json',
+                    data: JSON.stringify(rowDataList),
+                    success: function (response) {
+                        alert("성공");
+                    }, error: function () {
+                        alert(response);
                     }
-                }
-                if(reload == 1){
-                    location.reload();
-                }else{
-                    $("#grid").trigger("reloadGrid");
-                }
+                });
+
+                location.reload();
                 $('button.editBtn').addClass("d-none");
             });
 

@@ -126,10 +126,4 @@
         seq = #{seq}
     </update>
 
-    <select id="selectSeq" parameterType="int" resultType="int">
-        SELECT
-            MAX(seq)
-        FROM
-            Board.tbl_board
-    </select>
 </mapper>

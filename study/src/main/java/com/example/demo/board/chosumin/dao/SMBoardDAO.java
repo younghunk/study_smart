@@ -44,12 +44,6 @@ public class SMBoardDAO {
         return result;
     }
 
-    // seq 조회
-    public int selectSeq(){
-        int seq = SMsqlsession.selectOne("Sumin.selectSeq");
-        return seq;
-    }
-
     // 게시글 삭제
     public int deleteBoard(int seq){
         int result = SMsqlsession.update("Sumin.deleteBoard", seq);
