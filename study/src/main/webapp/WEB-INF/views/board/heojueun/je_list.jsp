@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% String ctxPath = request.getContextPath(); %>
 
 <!DOCTYPE html>
@@ -31,6 +30,29 @@
 			border-width: 1px;
 		}
 		
+		.btn-delete {
+	        background: white;
+	        border: 1px solid #dc3545;
+	        color: #dc3545;
+	        cursor: pointer;
+	        transition: background 0.3s ease, border 0.3s ease;
+	    }
+		
+		.btn-delete:hover {
+            background: #c82333;
+			color: white;
+            border: 1px solid #c82333;
+        }
+		
+		.ui-jqgrid .ui-jqgrid-bdiv {
+			position: relative;
+			 margin: 0;
+			 padding:0;
+			 overflow: auto; 
+			 text-align:left;
+			 overflow-x: hidden;
+		 }
+		
 		table {
 			font-size: 12px;
 		}
@@ -44,9 +66,27 @@
 		let editArr = new Array();
 		let saveArr = [];
 		let col;
-		
+
+		let delArr = new Array();
+
         $(document).ready(function() {
             fn_initGrid("grid");
+			
+			$("#delete").click(function() {
+				let selectedRowIds = $("#grid").jqGrid('getGridParam', 'selarrrow'); // 다중 행 선택 지원
+		        if (selectedRowIds == "") {
+		            alert("삭제할 게시글을 선택해주세요.");
+		            return;
+		        } else {
+		            $('button.editBtn').removeClass("d-none");
+		            for(let i =0; i<selectedRowIds.length; i++){
+						delArr.push(selectedRowIds[i]);
+						$("#grid").jqGrid("delRowData", selectedRowIds[i]); // jqGrid내에서 행 삭제
+					}
+		        }
+				console.log(delArr);
+			});
+			
 		});
 
         function fn_initGrid(grid_id) {
@@ -54,9 +94,9 @@
                 url: '/heojueun/getList.do',
                 datatype: "json",
                 mtype: "POST",
-                colNames: ['글번호', '제목', '내용', '캘린더', '작성일', 'groupno', 'fk_seq', 'depthno', 'select', 'noninput'],
+                colNames: ['글번호', '제목', '내용', '캘린더', '작성일', 'groupno', 'fk_seq', 'depthno', 'select', 'noninput', 'selectType'],
                 colModel: [
-                    { name: 'seq', index: 'seq', align: 'center', width: '5%', sortable: true },
+                    { name: 'seq', index: 'seq', align: 'center', width: '5%', sortable: true},
                     { name: 'subject', index: 'subject', align: 'left', width: '15%', sortable: false, editable: true},
                     { name: 'content', index: 'content', align: 'left', width: '25%', sortable: false, editable: true},
 					{ name:'date',		index:'date', 		align:'center',	width:'15%',	sortable: false, 
@@ -83,38 +123,37 @@
 								value: "A:A;B:B;"
 							}
 					},
-					{name:'noninput', index:'noninput', alwign:'center', width:'15%', sortable: false, hidden: true, editable: false }
+					{name:'noninput', index:'noninput', alwign:'center', width:'15%', sortable: false, hidden: true, editable: false },
+					{ name: 'selectType', index: 'selectType', align: 'center', width: '5%', sortable: false, hidden: true},
                 ],
-                rowNum: 20,
-				rowList:[5,10,15,20],
+				rowNum: 2000,
+				scroll : true, 
+				cellEdit: true,
                 viewrecords: true,
                 multiselect: true,
                 sortorder: "desc",
                 sortable: true,
                 loadonce: true,
-				cellEdit:true,
 				cellsubmit: 'clientArray',
                 gridview: false,
                 autowidth: true,
-                height: "auto",
-				pager:'#grid',
+                height: "500px",
+				pager: "#grid",
 				loadtext  : "로딩중...",
 				beforeSelectRow: function (rowid, e) {
-					var $myGrid = $(this);
-				    var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
-				    var cm = $myGrid.jqGrid('getGridParam', 'colModel');
-				    return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
-                },
+					var $myGrid = $(this),
+						 i = $.jgrid.getCellIndex($(e.target).closest('td')[0]),
+						cm = $myGrid.jqGrid('getGridParam', 'colModel');
+				    return (cm[i].name === 'cb');
+				},
 				onCellSelect: function(rowid, iCol, cellcontent, e) {
-					console.log("rowid : ", rowid);
                   	editArr.push(rowid);
 				},
 				afterEditCell: function(id,name,val,iRow,iCol){
-		        	console.log("dd");
 		        	$("#"+iRow+"_"+name).bind('blur',function(){
 		        		$("#"+ grid_id).saveCell(iRow,iCol);
 		        	});
-		        }
+		        },
             });
         }
 		
@@ -155,23 +194,21 @@
 		// 행 추가 버튼
 		function fn_addRow() {
 			// 새 행의 ID 생성
-			var newRowId = $.jgrid.randId(); 
+			var newRowId = $("#grid").getGridParam("reccount");
 			// 새 행의 데이터 생성
-	        var newRowData = {}; 
-	        console.log("newRowId : ", newRowId)
+	        var newRowData = {};
 	        // 그리드에 새 행 추가
-	        $("#grid").jqGrid('addRowData', newRowId,  newRowData, 'first');
+	        $("#grid").jqGrid('addRowData', newRowId+1,  newRowData, 'first');
 		}
+		
+		// 저장 버튼 누르기 전
 		function before_save() {
 			let selectedRowId = $("#grid").jqGrid('getGridParam', 'selrow');
 			let arr = Array.from(new Set(editArr));
-			let cur = [];
 			let flag = false;
+			let cur = [];
 			let temp;
 			let idx;
-			
-			
-			console.log("selectedRowId : ", selectedRowId);
 			
 			if (selectedRowId) 
 		        $("#grid").jqGrid('restoreRow', selectedRowId);
@@ -180,11 +217,9 @@
 				idx = $("#grid").jqGrid('getGridParam', 'rowNum') * ($("#grid").jqGrid('getGridParam', 'page') - 1);
 				flag = true;
 			}
-			console.log("arr : ", arr);
 			// DB에 input tag 들어가는거 방지하는 코드
 			for(let i = 0; i < arr.length; i++) {
 				temp = $("#grid").jqGrid("getRowData", arr[i]);
-				console.log("temp : ", temp);
 				if(flag)
 					idx = selectedRowId - idx;
 				else
@@ -203,13 +238,17 @@
 			
 			fn_save(saveArr);
 		}
+		
 		// 저장버튼
 		function fn_save(saveArr) {
-			// 저장 시작 ajax 
 			$.ajax({
 				url: '/heojueun/updatePost.do',
 				type: 'POST',
-				data: JSON.stringify(saveArr),
+				data:
+				{
+					board : JSON.stringify(saveArr),
+					delArr : delArr
+				},
 				contentType: 'application/json', // 요청 헤더에 Content-Type 설정
 				success: function(res) {
 					if(res == 200) {
@@ -218,13 +257,11 @@
 					}
 					else
 						alert("Server Error"+ res.message);
-						console.log("res : ", res);
 				},
 				erorr: function(request, status, error) {
-					alert("삭제에 실패했습니다. 원인 => code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					alert("저장에 실패했습니다. 원인 => code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 				}
 			});
-			
 			
 		}
 		
@@ -233,7 +270,6 @@
 	        var selectedRowIds = $("#grid").jqGrid('getGridParam', 'selrow');
 	        if (selectedRowIds != undefined && selectedRowIds != null) {
 	            var rowData = $("#grid").jqGrid('getRowData', selectedRowIds);
-	            console.log("Row Data: ", rowData);
 
 	            var subject = rowData.subject;
 	            var groupno = rowData.groupno;
@@ -255,15 +291,12 @@
 
 
 		// 삭제 버튼
-		function fn_delete() {
+		/*function fn_delete() {
 		    var selectedRowIds = $("#grid").jqGrid('getGridParam', 'selarrrow'); // 다중 행 선택 지원
-		    console.log("selectedRowIds: ", selectedRowIds);
 
 		    if (selectedRowIds.length > 0) {
 		        let rowDataArray = selectedRowIds.map(rowId => {
 		            let rowData = $("#grid").jqGrid('getRowData', rowId);
-		            console.log("Row ID: ", rowId);
-		            console.log("Row Data: ", rowData);
 		            return rowData;
 		        });
 
@@ -285,9 +318,7 @@
 		    } else {
 		        alert("삭제할 행을 선택해주세요.");
 		    }
-		}
-
-
+		}*/
 		
 		
     </script>
@@ -296,10 +327,10 @@
 		<div style="margin: auto;">
 			<h2 style="margin: 30px 0 30px 0;">글목록</h2>
 			<table style="width: 1200px;" id="grid"></table>
-			<button style="float: left;" type="button" onclick="fn_addRow()">행추가</button>
-			<button type="button" onclick="before_save()">저장</button>
-			<button type="button" onclick="fn_delete()">삭제</button>
-			<button type="button" onclick="newPost()">글쓰기</button>
+			<button style="float: left;" type="button" onclick="fn_addRow()" id="create">글쓰기</button>
+			<button class="btn-delete" type="button" id="delete">삭제</button>
+			<button type="button" onclick="before_save()" class="editBtn" id="save">저장</button>
+			<!--<button type="button" onclick="newPost()">글쓰기</button>-->
 			<button type="button" onclick="newComent()">답글쓰기</button>
 		</div>
     </div>

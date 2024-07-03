@@ -2,6 +2,7 @@ package com.example.demo.board.heojueun.service;
 
 import java.util.*;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.board.heojueun.dao.JEBoardDao;
 import com.example.demo.board.heojueun.vo.JEBoardVo;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class JEService {
@@ -47,20 +50,45 @@ public class JEService {
 	
 	// 게시글 수정
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public int updatePost(List<JEBoardVo> list) throws Exception {
+    public int updatePost(Map<String, Object> map) throws Exception {
 		int count = 0;
-		for(JEBoardVo jeBoardVo : list) {
-			if(jeBoardVo.getDate() == null || jeBoardVo.getDate().equals("")) 
-			    jeBoardVo.setDate(null);
-			
-			if (jeBoardVo.getSeq() != null && jeBoardVo.getSeq() > 0) {
-				count += jeBoardDao.updatePost(jeBoardVo);
-			} else {
-				count += jeBoardDao.gridInsertPost(jeBoardVo);
+		ObjectMapper objectMapper = new ObjectMapper();
+		List<JEBoardVo> list = objectMapper.readValue(map.get("board").toString(), new TypeReference<List<JEBoardVo>>() {});
+        JEBoardVo jeBoardVo = null;
+		System.out.println(list.toString());
+        
+		if(list != null && list.size() > 0)
+		{
+			for(int i = 0; i < list.size(); i++)
+			{
+				jeBoardVo = objectMapper.convertValue(list.get(i), JEBoardVo.class);
+				if (jeBoardVo.getSeq() != null && jeBoardVo.getSeq().length() > 0) 
+					count += jeBoardDao.updatePost(jeBoardVo);
+				else 
+					count += jeBoardDao.gridInsertPost(jeBoardVo);
 			}
-			//int return 타입을 사용해서 업데이트가 완료됐을 때 카운트가 증가되야 하기 때문에 넣어줌
-			count += jeBoardDao.updatePost(jeBoardVo);
 		}
+		
+		if(map.get("delArr") != null && ((List<Long>) map.get("delArr")).size() > 0)
+		{
+			for(String seq : (List<String>) map.get("delArr"))
+			{
+				count += jeBoardDao.deleteBoard(new JEBoardVo(seq));
+			}
+		}
+		
+//		for(JEBoardVo jeBoardVo : list) {
+//			if(jeBoardVo.getDate() == null || jeBoardVo.getDate().equals("")) 
+//			    jeBoardVo.setDate(null);
+//			
+//			if (jeBoardVo.getSeq() != null && jeBoardVo.getSeq() > 0) {
+//				count += jeBoardDao.updatePost(jeBoardVo);
+//			} else {
+//				count += jeBoardDao.gridInsertPost(jeBoardVo);
+//			}
+//			//int return 타입을 사용해서 업데이트가 완료됐을 때 카운트가 증가되야 하기 때문에 넣어줌
+//			count += jeBoardDao.updatePost(jeBoardVo);
+//		}
 		return count;
     }
 	
@@ -78,7 +106,6 @@ public class JEService {
 	public int deletePost(List<JEBoardVo> list) throws Exception {
         int count = 0;
         for (JEBoardVo jeBoardVo : list) {
-        	System.out.println("Deleting: " + jeBoardVo.getContent());
             count += jeBoardDao.deleteBoard(jeBoardVo);
         }
         return count;

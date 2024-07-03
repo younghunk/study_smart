@@ -86,19 +86,19 @@ public class JEController {
 	
 	// 게시판 수정하기
 	@PostMapping("/updatePost.do")
-	public ResponseEntity<Object> updatePost(@RequestBody List<JEBoardVo> list) {
-		System.out.println("list :" + list.toString());
+	public ResponseEntity<Object> updatePost(@RequestBody Map<String, Object> map) {
 		try {
-			if (jeService.updatePost(list) > 0)
-				return new ResponseEntity<Object>(200, HttpStatus.OK);
-			else
-				return new ResponseEntity<Object>(500, HttpStatus.OK);
+		  if (jeService.updatePost(map) > 0) 
+			  return new ResponseEntity<Object>(200, HttpStatus.OK); 
+		  else 
+			  return new ResponseEntity<Object>(500, HttpStatus.OK);
 		} 
 		catch (Exception e) {
+			e.printStackTrace();
 			logger.debug(e.toString());
 			return new ResponseEntity<Object>(500, HttpStatus.OK);
 		}
-	}
+	} 
 	
 	// 답글쓰기
 	@PostMapping("/newComment.do")

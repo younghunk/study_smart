@@ -23,18 +23,21 @@
 	<!-- 전체 게시글 조회 -->
     <select id="selectBoard" resultMap="jeBoardVo">
         SELECT seq, userid, subject, content, readCount, regDate, status, date, commentCount, groupno, fk_seq, depthno
-        	FROM Board.tbl_board order by seq desc
+        	FROM tbl_board order by seq desc
     </select>
     
     <!-- 글쓰기 -->
     <insert id="insertBoard" parameterMap="paramJeBoardVo">
-    	INSERT INTO Board.tbl_board ( subject, content, date, groupno )
-		VALUES(#{subject},#{content},#{date}, #{groupno})
+    	INSERT INTO tbl_board ( subject, content, groupno )
+		VALUES(
+		CASE WHEN TRIM(#{subject}) = '' THEN NULL ELSE TRIM(#{subject}) END,
+		CASE WHEN TRIM(#{content}) = '' THEN NULL ELSE TRIM(#{content}) END,
+		#{groupno})
     </insert>
     
     <!-- 게시글 수정하기 -->
     <update id="updateBoard" parameterMap="paramJeBoardVo">
-    	UPDATE Board.tbl_board SET subject = #{subject}, content = #{content}, date = #{date}
+    	UPDATE tbl_board SET subject = #{subject}, content = #{content}, date = #{date}
 		WHERE seq = #{seq}
     </update>
     
@@ -46,13 +49,13 @@
 	
 	<!-- 삭제하기 -->
 	<delete id="deletePost" parameterMap="paramJeBoardVo">
-		delete from Board.tbl_board 
+		delete from tbl_board 
 		WHERE seq = #{seq}
 	</delete>
 	
 	<!-- 테이블에서 groupno 컬럼의 최대값 알아오기 -->
 	<select id="getGroupnoMax" resultType="int">
 		SELECT nvl(max(groupno), 0)
-		    FROM Board.tbl_board
+		    FROM tbl_board
 	</select>
 </mapper>
